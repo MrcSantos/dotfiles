@@ -13,8 +13,9 @@ then
 
 	echo "[-] Installing and configuring ZShell..."
 	sudo eopkg install zsh -y 1>/dev/null
-	echo 'y' | sh -c "$(curl -fsSL https://raw.github.com/robbyrussell/oh-my-zsh/master/tools/install.sh)"
-
+	sh -c "$(curl -fsSL https://raw.github.com/robbyrussell/oh-my-zsh/master/tools/install.sh)"
+	chsh -s $(which zsh)
+# .zshenv, .zprofile, .zshrc, .zlogin
 	clear
 
 	neofetch
