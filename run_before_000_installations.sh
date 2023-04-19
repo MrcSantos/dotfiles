@@ -2,19 +2,21 @@
 set -eu
 
 OS=$(( lsb_release -ds || cat /etc/*release || uname -om ) 2>/dev/null | head -n1)
+echo "[.] Enter the sudo password: "
+read -s PASSWORD
 
 if [ $OS = '"Solus"' ]
 then
 	echo "[-] Updating system..."
-	sudo eopkg upgrade -y 1>/dev/null
+	echo $PASSWORD | sudo eopkg upgrade -y 1>/dev/null
 	
 	echo "[-] Installing basic tools..."
-	sudo eopkg install neofetch git tmux vim -y 1>/dev/null
+	echo $PASSWORD | sudo eopkg install neofetch git tmux vim -y 1>/dev/null
 
 	echo "[-] Installing and configuring ZShell..."
-	sudo eopkg install zsh -y 1>/dev/null
+	echo $PASSWORD | sudo eopkg install zsh -y 1>/dev/null
 	echo 'y' | sh -c "$(curl -fsSL https://raw.github.com/robbyrussell/oh-my-zsh/master/tools/install.sh)" 1>/dev/null
-	git clone https://github.com/zsh-users/zsh-autosuggestions ${ZSH_CUSTOM:-~/.oh-my-zsh/custom}/plugins/zsh-autosuggestions 1>/dev/null
+	git clone https://github.com/zsh-users/zsh-autosuggestions ${ZSH_CUSTOM:-~/.oh-my-zsh/custom}/plugins/zsh-autosuggestions 1>/dev/null 2>/dev/null 3>/dev/null 0>/dev/null
 	chsh -s $(which zsh) 1>/dev/null
 	echo "[!] Remember to log out and login again"
 
