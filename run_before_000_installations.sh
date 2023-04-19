@@ -15,9 +15,12 @@ then
 	sudo eopkg install zsh -y 1>/dev/null
 	echo 'y' | sh -c "$(curl -fsSL https://raw.github.com/robbyrussell/oh-my-zsh/master/tools/install.sh)" 1>/dev/null
 	git clone https://github.com/zsh-users/zsh-autosuggestions ${ZSH_CUSTOM:-~/.oh-my-zsh/custom}/plugins/zsh-autosuggestions 1>/dev/null
-	
-	clear
+	chsh -s $(which zsh) 1>/dev/null
+	echo "[!] Remember to log out and login again"
 
+	read  -n 1 -p "[.] Press Enter to continue..."
+
+	clear
 	neofetch
 fi
 
