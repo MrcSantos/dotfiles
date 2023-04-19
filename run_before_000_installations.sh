@@ -8,15 +8,15 @@ read -s PASSWORD
 if [ $OS = '"Solus"' ]
 then
 	echo "[-] Updating system..."
-	echo $PASSWORD | sudo eopkg upgrade -y 1>/dev/null
+	echo $PASSWORD | sudo -S eopkg upgrade -y 1>/dev/null
 	
 	echo "[-] Installing basic tools..."
-	echo $PASSWORD | sudo eopkg install neofetch git tmux vim -y 1>/dev/null
+	echo $PASSWORD | sudo -S eopkg install neofetch git tmux vim -y 1>/dev/null
 
 	echo "[-] Installing and configuring ZShell..."
-	echo $PASSWORD | sudo eopkg install zsh -y 1>/dev/null
+	echo $PASSWORD | sudo -S eopkg install zsh -y 1>/dev/null
 	echo 'y' | sh -c "$(curl -fsSL https://raw.github.com/robbyrussell/oh-my-zsh/master/tools/install.sh)" 1>/dev/null
-	git clone https://github.com/zsh-users/zsh-autosuggestions ${ZSH_CUSTOM:-~/.oh-my-zsh/custom}/plugins/zsh-autosuggestions 1>/dev/null 2>/dev/null 3>/dev/null 0>/dev/null
+	git clone -q https://github.com/zsh-users/zsh-autosuggestions ${ZSH_CUSTOM:-~/.oh-my-zsh/custom}/plugins/zsh-autosuggestions
 	chsh -s $(which zsh) 1>/dev/null
 	echo "[!] Remember to log out and login again"
 
