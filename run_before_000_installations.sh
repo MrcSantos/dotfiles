@@ -21,15 +21,14 @@ solus() {
 
 	echo "[-] Installing ZShell..."
 	eopkg install zsh -y 1>/dev/null
-	chsh -s $(which zsh) $NON_SUDO_USER 1>/dev/null
-	chsh -s $(which zsh) 1>/dev/null
+	chsh -s $(which zsh) $1 1>/dev/null
 }
 
 
 
 if [ $OS = '"Solus"' ]
 then
-	echo $PASSWORD | sudo -S bash -c "$(declare -f solus); solus"
+	echo $PASSWORD | sudo -S bash -c "$(declare -f solus); solus $USER"
 
 	echo 'y' | sh -c "$(curl -fsSL https://raw.github.com/robbyrussell/oh-my-zsh/master/tools/install.sh)" 1>/dev/null
 	git clone --quiet https://github.com/zsh-users/zsh-autosuggestions ${ZSH_CUSTOM:-~/.oh-my-zsh/custom}/plugins/zsh-autosuggestions
