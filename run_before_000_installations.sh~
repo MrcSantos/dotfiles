@@ -22,12 +22,6 @@ solus() {
 	echo "[-] Installing ZShell..."
 	eopkg install zsh -y 1>/dev/null
 	chsh -s $(which zsh) $1 1>/dev/null
-
-	echo "[-] Installing NerdFonts..."
-	wget https://github.com/ryanoasis/nerd-fonts/releases/download/v2.3.3/Hasklig.zip -O /tmp/nerd_fonts.zip
-	mkdir -p /home/$1/.local/share/fonts
-	unzip /tmp/nerd_fonts.zip -d /home/$1/.local/share/fonts
-	chown -R $1 /home/$1/.local/share/fonts
 }
 
 
