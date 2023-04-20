@@ -14,23 +14,31 @@ solus() {
 	eopkg upgrade -y 1>/dev/null
 	
 	echo "[-] Installing basic tools..."
-	eopkg install neofetch git tmux vim -y 1>/dev/null
+	eopkg install -c system.devel -y 1>/dev/null
+	eopkg install neofetch git tmux vim cargo -y 1>/dev/null
 
 	echo "[-] Installing nnn..."
-	eopkg install nnn -y 1> /dev/null
+	eopkg install nnn -y 1>/dev/null
 
 	echo "[-] Installing ZShell..."
 	eopkg install zsh -y 1>/dev/null
 	chsh -s $(which zsh) $1 1>/dev/null
+	chsh -s $(which zsh) root 1>/dev/null
 
 	echo "[-] Installing NerdFonts..."
-	wget https://github.com/ryanoasis/nerd-fonts/releases/download/v2.3.3/Hasklig.zip -O /tmp/nerd_fonts.zip
+	wget https://github.com/ryanoasis/nerd-fonts/releases/download/v2.3.3/Hasklig.zip -O /tmp/nerd_fonts.zip 1>/dev/null
 	mkdir -p /home/$1/.local/share/fonts
-	unzip /tmp/nerd_fonts.zip -d /home/$1/.local/share/fonts
+	mkdir -p /root/.local/share/fonts
+	mkdir -p /root/.config/nvim
+	unzip /tmp/nerd_fonts.zip -d /home/$1/.local/share/fonts 1>/dev/null
+	unzip /tmp/nerd_fonts.zip -d /root/.local/share/fonts 1>/dev/null
 	chown -R $1 /home/$1/.local/share/fonts
+
+	echo "[-] Installing nvim..."
+	eopkg install neovim -y 1>/dev/null
+	cargo install ripgrep -y 1>/dev/null
+  git clone https://github.com/NvChad/NvChad /root/.config/nvim --depth 1 1>/dev/null
 }
-
-
 
 if [ $OS = '"Solus"' ]
 then
@@ -41,6 +49,7 @@ then
 	echo "[!] Remember to log out and login again"
 	
 
+  sh -c "git clone https://github.com/NvChad/NvChad ~/.config/nvim --depth 1" 1>/dev/null
 
 	read  -n 1 -p "[.] Press Enter to continue..."
 
