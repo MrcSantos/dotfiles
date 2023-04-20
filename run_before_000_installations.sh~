@@ -14,7 +14,7 @@ solus() {
 	eopkg install neofetch git tmux vim -y 1>/dev/null
 
 	echo "[-] Installing nnn..."
-	eopkg install nnn -y 1> /dev/null
+	eopkg install nnn
 
 	echo "[-] Installing ZShell..."
 	eopkg install zsh -y 1>/dev/null
