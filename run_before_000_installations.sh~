@@ -31,7 +31,7 @@ then
 	echo $PASSWORD | sudo -S bash -c "$(declare -f solus); solus $USER"
 
 	echo 'y' | sh -c "$(curl -fsSL https://raw.github.com/robbyrussell/oh-my-zsh/master/tools/install.sh)" 1>/dev/null
-	sh -c "git clone --quiet https://github.com/zsh-users/zsh-autosuggestions ${ZSH_CUSTOM:-~/.oh-my-zsh/custom}/plugins/zsh-autosuggestions" 1>/dev/null
+	git clone --quiet https://github.com/zsh-users/zsh-autosuggestions ${ZSH_CUSTOM:-~/.oh-my-zsh/custom}/plugins/zsh-autosuggestions
 	echo "[!] Remember to log out and login again"
 	
 
