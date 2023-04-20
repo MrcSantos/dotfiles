@@ -18,6 +18,7 @@ solus() {
 
 	echo "[-] Installing ZShell..."
 	eopkg install zsh -y 1>/dev/null
+	chsh -s $(which zsh) 1>/dev/null
 }
 
 
@@ -28,7 +29,6 @@ then
 
 	echo 'y' | sh -c "$(curl -fsSL https://raw.github.com/robbyrussell/oh-my-zsh/master/tools/install.sh)" 1>/dev/null
 	git clone --quiet https://github.com/zsh-users/zsh-autosuggestions ${ZSH_CUSTOM:-~/.oh-my-zsh/custom}/plugins/zsh-autosuggestions
-	chsh -s $(which zsh) 1>/dev/null
 	echo "[!] Remember to log out and login again"
 	
 
