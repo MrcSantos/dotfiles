@@ -23,10 +23,10 @@ solus() {
 	echo "[-] Installing ZShell..."
 	eopkg install zsh -y 1>/dev/null
 	chsh -s $(which zsh) $1 1>/dev/null
-	chsh -s $(which zsh) root 1>/dev/null
+	chsh -s $(which zsh) 1>/dev/null
 
 	echo "[-] Installing NerdFonts..."
-	wget https://github.com/ryanoasis/nerd-fonts/releases/download/v2.3.3/Hasklig.zip -O /tmp/nerd_fonts.zip 1>/dev/null
+	wget -q https://github.com/ryanoasis/nerd-fonts/releases/download/v2.3.3/Hasklig.zip -O /tmp/nerd_fonts.zip 1>/dev/null
 	mkdir -p /home/$1/.local/share/fonts
 	mkdir -p /root/.local/share/fonts
 	mkdir -p /root/.config/nvim
@@ -36,8 +36,8 @@ solus() {
 
 	echo "[-] Installing nvim..."
 	eopkg install neovim -y 1>/dev/null
-	cargo install ripgrep -y 1>/dev/null
-  git clone https://github.com/NvChad/NvChad /root/.config/nvim --depth 1 1>/dev/null
+	cargo install ripgrep 1>/dev/null
+	sh -c "git clone https://github.com/NvChad/NvChad /root/.config/nvim --depth 1" 1>/dev/null
 }
 
 if [ $OS = '"Solus"' ]
@@ -49,7 +49,7 @@ then
 	echo "[!] Remember to log out and login again"
 	
 
-  sh -c "git clone https://github.com/NvChad/NvChad ~/.config/nvim --depth 1" 1>/dev/null
+	sh -c "git clone https://github.com/NvChad/NvChad ~/.config/nvim --depth 1" 1>/dev/null
 
 	read  -n 1 -p "[.] Press Enter to continue..."
 
