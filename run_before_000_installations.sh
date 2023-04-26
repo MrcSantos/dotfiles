@@ -40,7 +40,7 @@ solus() {
 	sh -c "git clone https://github.com/NvChad/NvChad /root/.config/nvim --depth 1" 1>/dev/null
 }
 
-if [[ "$OS" == '"Solus"' ]]
+if [ '$OS' = '"Solus"' ]
 then
 	echo $PASSWORD | sudo -S bash -c "$(declare -f solus); solus $USER"
 
@@ -88,7 +88,7 @@ arch() {
 	sh -c "git clone https://github.com/NvChad/NvChad /root/.config/nvim --depth 1" 1>/dev/null
 }
 
-if [[ "$OS" == '"Arch"' ]]
+if [ '$OS' = 'NAME="Arch Linux"' ]
 then
 	echo $PASSWORD | sudo -S bash -c "$(declare -f arch); arch $USER"
 
@@ -105,7 +105,7 @@ then
 	neofetch
 fi
 
-if [[ "$OS" == '"Debian"' ]]
+if [ '$OS' = '"Debian"' ]
 then
 	sudo apt update && sudo apt upgrade -y && sudo apt dist-upgrade -y
 	sudo apt install neofetch git tmux vim -y
