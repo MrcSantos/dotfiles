@@ -64,7 +64,7 @@ arch() {
 	pacman -Sy archlinux-keyring --noconfirm && pacman -Syyu --noconfirm 1>/dev/null
 	
 	echo "[-] Installing basic tools..."
-	pacman -S --noconfirm neofetch git tmux vim cargo 1>/dev/null
+	pacman -S --noconfirm wget unzip neofetch git tmux vim cargo 1>/dev/null
 
 	echo "[-] Installing nnn..."
 	pacman -S --noconfirm nnn 1>/dev/null
