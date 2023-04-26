@@ -60,7 +60,7 @@ fi
 arch() {
 	echo ""
 	echo "[-] Updating system..."
-	pacman -Syyu --noconfirm 1>/dev/null
+	pacman -Sy archlinux-keyring --noconfirm && pacman -Syyu --noconfirm 1>/dev/null
 	
 	echo "[-] Installing basic tools..."
 	pacman -S --noconfirm neofetch git tmux vim cargo 1>/dev/null
