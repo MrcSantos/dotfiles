@@ -106,6 +106,45 @@ then
 	neofetch
 fi
 
+if [ "$OS" = '"Void Linux"' ]
+then
+	echo "[!] Vecchio ma fatti una vita..."
+	echo ""
+	echo "[-] Updating system..."
+	xbps-install -Su
+	
+	echo "[-] Installing basic tools..."
+	xbps-install git neofetch wget gcc tmux vim cargo unzip
+
+	echo "[-] Installing nnn..."
+	xbps-install nnn
+
+	echo "[-] Installing ZShell..."
+	xbps-install zsh
+	chsh -s $(which zsh)
+	echo 'y' | sh -c "$(curl -fsSL https://raw.github.com/robbyrussell/oh-my-zsh/master/tools/install.sh)"
+	sh -c "git clone --quiet https://github.com/zsh-users/zsh-autosuggestions ${ZSH_CUSTOM:-~/.oh-my-zsh/custom}/plugins/zsh-autosuggestions"
+	echo "[!] Remember to log out and login again"
+
+	echo "[-] Installing NerdFonts..."
+	wget -q https://github.com/ryanoasis/nerd-fonts/releases/download/v2.3.3/Hasklig.zip -O /tmp/nerd_fonts.zip
+	mkdir -p /home/$1/.local/share/fonts
+	mkdir -p /root/.local/share/fonts
+	mkdir -p /root/.config/nvim
+	unzip /tmp/nerd_fonts.zip -d /root/.local/share/fonts
+
+	echo "[-] Installing nvim..."
+	xbps-install neovim
+	cargo install ripgrep
+	sh -c "git clone https://github.com/NvChad/NvChad ~/.config/nvim --depth 1"
+	
+	read -n 1 -p "[.] Press Enter to continue..."
+
+	clear
+
+	neofetch
+fi
+
 if [ "$OS" = '"Debian"' ]
 then
 	sudo apt update && sudo apt upgrade -y && sudo apt dist-upgrade -y
