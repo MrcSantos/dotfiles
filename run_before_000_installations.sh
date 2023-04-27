@@ -128,7 +128,6 @@ then
 
 	echo "[-] Installing NerdFonts..."
 	wget -q https://github.com/ryanoasis/nerd-fonts/releases/download/v2.3.3/Hasklig.zip -O /tmp/nerd_fonts.zip
-	mkdir -p /home/$1/.local/share/fonts
 	mkdir -p /root/.local/share/fonts
 	mkdir -p /root/.config/nvim
 	unzip /tmp/nerd_fonts.zip -d /root/.local/share/fonts
