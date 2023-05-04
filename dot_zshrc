@@ -100,4 +100,7 @@ source $ZSH/oh-my-zsh.sh
 # alias zshconfig="mate ~/.zshrc"
 # alias ohmyzsh="mate ~/.oh-my-zsh"
 
+# Import aliases
+source ~/.zshalias
+
 export EDITOR='nvim'
