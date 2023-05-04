@@ -5,6 +5,8 @@ alias egrep='egrep --color=auto'
 alias diff='diff --color=auto'
 alias ip='ip --color=auto'
 
+alias nnn='nnn -AdHiJ'
+
 alias ls='ls --color=auto'
 alias ll='ls -l'
 alias la='ls -A'
