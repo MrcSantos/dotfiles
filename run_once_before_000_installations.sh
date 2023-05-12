@@ -10,46 +10,43 @@ echo ""
 
 solus() {
 	echo ""
-	echo "[-] Updating system..."
-	eopkg upgrade -y 1>/dev/null
+	echo "[-] Updating system... (It may take a long time)"
+	eopkg upgrade -y &>/dev/null
 	
-	echo "[-] Installing basic tools..."
-	eopkg install -c system.devel -y 1>/dev/null
-	eopkg install neofetch git tmux vim cargo -y 1>/dev/null
-
-	echo "[-] Installing nnn..."
-	eopkg install nnn -y 1>/dev/null
+	echo "[-] Installing basic tools... (It may take a long time)"
+	eopkg install -c system.devel -y &>/dev/null
+	eopkg install neofetch git git-flow tmux vim cargo -y &>/dev/null
+	
+	echo "[-] Installing NerdFonts..."
+	sh -c "git clone --quiet https://github.com/ryanoasis/nerd-fonts /opt/nerd-fonts" &>/dev/null
+	chmod a+x /opt/nerd-fonts/install.sh
+	/opt/nerd-fonts/install.sh -q -S hasklig
 
 	echo "[-] Installing ZShell..."
-	eopkg install zsh -y 1>/dev/null
-	chsh -s $(which zsh) $1 1>/dev/null
-	chsh -s $(which zsh) 1>/dev/null
-
-	echo "[-] Installing NerdFonts..."
-	wget -q https://github.com/ryanoasis/nerd-fonts/releases/download/v2.3.3/Hasklig.zip -O /tmp/nerd_fonts.zip 1>/dev/null
-	mkdir -p /home/$1/.local/share/fonts
-	mkdir -p /root/.local/share/fonts
-	mkdir -p /root/.config/nvim
-	unzip /tmp/nerd_fonts.zip -d /home/$1/.local/share/fonts 1>/dev/null
-	unzip /tmp/nerd_fonts.zip -d /root/.local/share/fonts 1>/dev/null
-	chown -R $1 /home/$1/.local/share/fonts
+	eopkg install zsh -y &>/dev/null
+	chsh -s $(which zsh) $1 &>/dev/null
+	chsh -s $(which zsh) &>/dev/null
+	
+	echo "[-] Installing nnn with nerd fonts..."
 
 	echo "[-] Installing nvim..."
-	eopkg install neovim -y 1>/dev/null
-	cargo install ripgrep 1>/dev/null
-	sh -c "git clone https://github.com/NvChad/NvChad /root/.config/nvim --depth 1" 1>/dev/null
+	eopkg install neovim -y &>/dev/null
+	cargo install -q ripgrep &>/dev/null
+	sh -c "git clone --quiet https://github.com/NvChad/NvChad /root/.config/nvim --depth 1" &>/dev/null
 }
 
 if [ "$OS" = '"Solus"' ]
 then
 	echo $PASSWORD | sudo -S bash -c "$(declare -f solus); solus $USER"
-
-	echo 'y' | sh -c "$(curl -fsSL https://raw.github.com/robbyrussell/oh-my-zsh/master/tools/install.sh)" 1>/dev/null
-	sh -c "git clone --quiet https://github.com/zsh-users/zsh-autosuggestions ${ZSH_CUSTOM:-~/.oh-my-zsh/custom}/plugins/zsh-autosuggestions" 1>/dev/null
-	echo "[!] Remember to log out and login again"
+	sh -c "git clone --quiet https://github.com/NvChad/NvChad ~/.config/nvim --depth 1" &>/dev/null
+	echo 'y' | sh -c "$(curl -fsSL https://raw.github.com/robbyrussell/oh-my-zsh/master/tools/install.sh)" &>/dev/null
+	sh -c "git clone --quiet https://github.com/zsh-users/zsh-autosuggestions ${ZSH_CUSTOM:-~/.oh-my-zsh/custom}/plugins/zsh-autosuggestions" &>/dev/null
 	
-
-	sh -c "git clone https://github.com/NvChad/NvChad ~/.config/nvim --depth 1" 1>/dev/null
+	echo ""
+	echo "[!] Remember these things:"
+	echo "    - Logout and login again"
+	echo "    - ZSH will be the default shell only for root and this user"
+	echo ""
 
 	read  -n 1 -p "[.] Press Enter to continue..."
 
@@ -61,44 +58,44 @@ arch() {
 	echo ""
 	echo "[-] Updating system..."
 	pacman-key --refresh-keys
-	pacman -Sy archlinux-keyring --noconfirm && pacman -Syyu --noconfirm 1>/dev/null
+	pacman -Sy archlinux-keyring --noconfirm && pacman -Syyu --noconfirm &>/dev/null
 	
 	echo "[-] Installing basic tools..."
-	pacman -S --noconfirm wget unzip neofetch git tmux vim cargo 1>/dev/null
+	pacman -S --noconfirm wget unzip neofetch git tmux vim cargo &>/dev/null
 
 	echo "[-] Installing nnn..."
-	pacman -S --noconfirm nnn 1>/dev/null
+	pacman -S --noconfirm nnn &>/dev/null
 
 	echo "[-] Installing ZShell..."
-	pacman -S --noconfirm zsh 1>/dev/null
-	chsh -s $(which zsh) $1 1>/dev/null
-	chsh -s $(which zsh) 1>/dev/null
+	pacman -S --noconfirm zsh &>/dev/null
+	chsh -s $(which zsh) $1 &>/dev/null
+	chsh -s $(which zsh) &>/dev/null
 
 	echo "[-] Installing NerdFonts..."
-	wget -q https://github.com/ryanoasis/nerd-fonts/releases/download/v2.3.3/Hasklig.zip -O /tmp/nerd_fonts.zip 1>/dev/null
+	wget -q https://github.com/ryanoasis/nerd-fonts/releases/download/v2.3.3/Hasklig.zip -O /tmp/nerd_fonts.zip &>/dev/null
 	mkdir -p /home/$1/.local/share/fonts
 	mkdir -p /root/.local/share/fonts
 	mkdir -p /root/.config/nvim
-	unzip /tmp/nerd_fonts.zip -d /home/$1/.local/share/fonts 1>/dev/null
-	unzip /tmp/nerd_fonts.zip -d /root/.local/share/fonts 1>/dev/null
+	unzip /tmp/nerd_fonts.zip -d /home/$1/.local/share/fonts &>/dev/null
+	unzip /tmp/nerd_fonts.zip -d /root/.local/share/fonts &>/dev/null
 	chown -R $1 /home/$1/.local/share/fonts
 
 	echo "[-] Installing nvim..."
-	pacman -S --noconfirm neovim 1>/dev/null
-	cargo install ripgrep 1>/dev/null
-	sh -c "git clone https://github.com/NvChad/NvChad /root/.config/nvim --depth 1" 1>/dev/null
+	pacman -S --noconfirm neovim &>/dev/null
+	cargo install ripgrep &>/dev/null
+	sh -c "git clone https://github.com/NvChad/NvChad /root/.config/nvim --depth 1" &>/dev/null
 }
 
 if [ "$OS" = 'NAME="Arch Linux"' ]
 then
 	echo $PASSWORD | sudo -S bash -c "$(declare -f arch); arch $USER"
 
-	echo 'y' | sh -c "$(curl -fsSL https://raw.github.com/robbyrussell/oh-my-zsh/master/tools/install.sh)" 1>/dev/null
-	sh -c "git clone --quiet https://github.com/zsh-users/zsh-autosuggestions ${ZSH_CUSTOM:-~/.oh-my-zsh/custom}/plugins/zsh-autosuggestions" 1>/dev/null
+	echo 'y' | sh -c "$(curl -fsSL https://raw.github.com/robbyrussell/oh-my-zsh/master/tools/install.sh)" &>/dev/null
+	sh -c "git clone --quiet https://github.com/zsh-users/zsh-autosuggestions ${ZSH_CUSTOM:-~/.oh-my-zsh/custom}/plugins/zsh-autosuggestions" &>/dev/null
 	echo "[!] Remember to log out and login again"
 	
 
-	sh -c "git clone https://github.com/NvChad/NvChad ~/.config/nvim --depth 1" 1>/dev/null
+	sh -c "git clone https://github.com/NvChad/NvChad ~/.config/nvim --depth 1" &>/dev/null
 
 	read  -n 1 -p "[.] Press Enter to continue..."
 
@@ -147,46 +144,46 @@ fi
 kali() {
 	echo ""
 	echo "[-] Updating system..."
-	apt update 1>/dev/null
-	apt upgrade -y 1>/dev/null
-	apt dist-upgrade -y 1>/dev/null
+	apt update &>/dev/null
+	apt upgrade -y &>/dev/null
+	apt dist-upgrade -y &>/dev/null
 	
 	echo "[-] Installing basic tools..."
-	apt install wget unzip neofetch git tmux vim cargo 1>/dev/null
+	apt install wget unzip neofetch git tmux vim cargo &>/dev/null
 
 	echo "[-] Installing nnn..."
-	apt install nnn 1>/dev/null
+	apt install nnn &>/dev/null
 
 	echo "[-] Installing ZShell..."
-	apt install zsh 1>/dev/null
-	chsh -s $(which zsh) $1 1>/dev/null
-	chsh -s $(which zsh) 1>/dev/null
+	apt install zsh &>/dev/null
+	chsh -s $(which zsh) $1 &>/dev/null
+	chsh -s $(which zsh) &>/dev/null
 
 	echo "[-] Installing NerdFonts..."
-	wget -q https://github.com/ryanoasis/nerd-fonts/releases/download/v2.3.3/Hasklig.zip -O /tmp/nerd_fonts.zip 1>/dev/null
+	wget -q https://github.com/ryanoasis/nerd-fonts/releases/download/v2.3.3/Hasklig.zip -O /tmp/nerd_fonts.zip &>/dev/null
 	mkdir -p /home/$1/.local/share/fonts
 	mkdir -p /root/.local/share/fonts
 	mkdir -p /root/.config/nvim
-	unzip /tmp/nerd_fonts.zip -d /home/$1/.local/share/fonts 1>/dev/null
-	unzip /tmp/nerd_fonts.zip -d /root/.local/share/fonts 1>/dev/null
+	unzip /tmp/nerd_fonts.zip -d /home/$1/.local/share/fonts &>/dev/null
+	unzip /tmp/nerd_fonts.zip -d /root/.local/share/fonts &>/dev/null
 	chown -R $1 /home/$1/.local/share/fonts
 
 	echo "[-] Installing nvim..."
-	apt install neovim 1>/dev/null
-	cargo install ripgrep 1>/dev/null
-	sh -c "git clone https://github.com/NvChad/NvChad /root/.config/nvim --depth 1" 1>/dev/null
+	apt install neovim &>/dev/null
+	cargo install ripgrep &>/dev/null
+	sh -c "git clone https://github.com/NvChad/NvChad /root/.config/nvim --depth 1" &>/dev/null
 }
 
 if [ "$OS" = 'PRETTY_NAME="Kali GNU/Linux Rolling"' ]
 then
 	echo $PASSWORD | sudo -S bash -c "$(declare -f kali); kali $USER"
 
-	echo 'y' | sh -c "$(curl -fsSL https://raw.github.com/robbyrussell/oh-my-zsh/master/tools/install.sh)" 1>/dev/null
-	sh -c "git clone --quiet https://github.com/zsh-users/zsh-autosuggestions ${ZSH_CUSTOM:-~/.oh-my-zsh/custom}/plugins/zsh-autosuggestions" 1>/dev/null
+	echo 'y' | sh -c "$(curl -fsSL https://raw.github.com/robbyrussell/oh-my-zsh/master/tools/install.sh)" &>/dev/null
+	sh -c "git clone --quiet https://github.com/zsh-users/zsh-autosuggestions ${ZSH_CUSTOM:-~/.oh-my-zsh/custom}/plugins/zsh-autosuggestions" &>/dev/null
 	echo "[!] Remember to log out and login again"
 	
 
-	sh -c "git clone https://github.com/NvChad/NvChad ~/.config/nvim --depth 1" 1>/dev/null
+	sh -c "git clone https://github.com/NvChad/NvChad ~/.config/nvim --depth 1" &>/dev/null
 
 	read  -n 1 -p "[.] Press Enter to continue..."
 
