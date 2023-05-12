@@ -28,6 +28,10 @@ solus() {
 	chsh -s $(which zsh) &>/dev/null
 	
 	echo "[-] Installing nnn with nerd fonts..."
+	sh -c "git clone https://github.com/jarun/nnn.git /opt/nnn --quiet" &>/dev/null
+	cd /opt/nnn
+	make O_NERD=1 &>/dev/null
+	cp /opt/nnn/nnn /bin/
 
 	echo "[-] Installing nvim..."
 	eopkg install neovim -y &>/dev/null
