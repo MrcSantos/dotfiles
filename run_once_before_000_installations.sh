@@ -106,11 +106,13 @@ echo
 #--------------------------------------------------------------------------------------------------#
 
 # Asks the user to update the system
-read -n 1 -p "[?] Do you want to update the system? [y/N]" choice
+read -n 1 -p "[?] Do you want to update the system? [y/N] " choice
+echo
 case $choice in
     y|Y)
         echo "[.] Upgrading system... (This can take a while)"
-        "$($UPGRADE_COMMAND &>/dev/null)"
+        echo $UPGRADE_COMMAND
+        #"$($UPGRADE_COMMAND &>/dev/null)"
     ;;
 esac
 
