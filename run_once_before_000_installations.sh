@@ -57,8 +57,8 @@ is_os_known() {
 
         *[aA]rch*)
             OS="Arch Linux"
-            UPGRADE_COMMAND="pacman -Syu &>/dev/null"
-            INSTALL_COMMAND="pacman -S --needed --noconfirm"
+            UPGRADE_COMMAND="echo `y` | pacman -Syu &>/dev/null"
+            INSTALL_COMMAND="echo `y` | pacman -S --needed --noconfirm"
             SYSTEM_DIR="/usr/local/bin"
             WORKSTATION_TYPE="desktop"
         ;;
@@ -143,7 +143,8 @@ case $OS in
 
         # Not available for root user
         for user in $USER_LIST; do
-            install_pau_for_user "$user"
+            echo $user
+            # install_pau_for_user "$user"
         done
     ;;
 
