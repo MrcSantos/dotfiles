@@ -12,7 +12,10 @@ OS=$(( lsb_release -ds || cat /etc/*release || uname -om ) 2>/dev/null | head -n
 # Get non-root users
 USER_LIST=$(awk -F: '$3 >= 1000 && $7 != "/sbin/nologin" {print $1}' /etc/passwd)
 
-
+# Going against good programming practices
+# One should never assign variables with a single letter as name
+# However this variable is static and is present in every command to make the output silent
+n="&>/dev/null"
 
 # Other global variables declarations
 UPGRADE_COMMAND=""
@@ -24,7 +27,7 @@ sinstall() {
 # s(ilent)install
 # This function silently installs a package from global variables
 # Usage: install <packages> <optional flags>
-    return "$INSTALL_COMMAND $2 $1 &>/dev/null"
+    return "$INSTALL_COMMAND $2 $1 $n"
 }
 
 is_os_known() {    
@@ -42,7 +45,7 @@ is_os_known() {
     
         *Kali*)
             OS="Kali Linux"
-            UPGRADE_COMMAND="apt update && apt upgrade -y && apt dist-upgrade &>/dev/null"
+            UPGRADE_COMMAND="apt update && apt upgrade -y && apt dist-upgrade $n"
             INSTALL_COMMAND="apt install -y"
             SYSTEM_DIR="/usr/local/bin"
             WORKSTATION_TYPE="hacking workstation"
@@ -50,7 +53,7 @@ is_os_known() {
     
         *Ubuntu*)
             OS="Ubuntu"
-            UPGRADE_COMMAND="apt update && apt upgrade -y && apt dist-upgrade &>/dev/null"
+            UPGRADE_COMMAND="apt update && apt upgrade -y && apt dist-upgrade $n"
             INSTALL_COMMAND="apt install -y"
             SYSTEM_DIR="/usr/local/bin"
             WORKSTATION_TYPE="desktop"
@@ -58,7 +61,7 @@ is_os_known() {
     
         *Arch*)
             OS="Arch Linux"
-            UPGRADE_COMMAND="pacman -Syu --noconfirm &>/dev/null"
+            UPGRADE_COMMAND="pacman -Syu --noconfirm $n"
             INSTALL_COMMAND="pacman -Syu --needed --noconfirm"
             SYSTEM_DIR="/usr/local/bin"
             WORKSTATION_TYPE="desktop"
@@ -119,71 +122,73 @@ echo "[.] Installing basic tools... (This can take a while)"
 case $OS in
     Solus OS)
         sinstall "system.devel" "-c"
-        sinstall "git git-flow tmux vim cargo"
+        sinstall "git git-flow tmux vim cargo screenfetch"
     ;;
 
     Kali Linux|Ubuntu)
-        sinstall "wget unzip git tmux vim cargo"
+        sinstall "wget unzip git tmux vim cargo screenfetch"
     ;;
 
     Arch Linux)
-        sinstall "wget unzip git tmux vim cargo"
+        sinstall "wget unzip git tmux vim cargo screenfetch"
     ;;
 
     Void Linux)
-        sinstall "git wget gcc tmux vim cargo unzip"
+        sinstall "git wget gcc tmux vim cargo unzip screenfetch"
     ;;
 esac
+
+echo # Extra spacing 
 
 ######################################################### FUNCTIONS
 
 install_nerdFonts() {
     echo "[.] Installing Nerd Fonts..."
 
-    mkdir -p /usr/share/fonts &>/dev/null
-    mkdir -p /opt/nf &>/dev/null
-    cd /opt/nf &>/dev/null
-    wget https://github.com/ryanoasis/nerd-fonts/releases/download/v3.0.2/JetBrainsMono.zip &>/dev/null
-    unzip /opt/nf/JetBrainsMono.zip -d /usr/share/fonts &>/dev/null
-    rm -rf /opt/nf &>/dev/null
-    fc-cache -f -v &>/dev/null
-    cd &>/dev/null
+    mkdir -p /usr/share/fonts $n
+    mkdir -p /opt/nf $n
+    cd /opt/nf $n
+    wget https://github.com/ryanoasis/nerd-fonts/releases/download/v3.0.2/JetBrainsMono.zip $n
+    unzip /opt/nf/JetBrainsMono.zip -d /usr/share/fonts $n
+    rm -rf /opt/nf $n
+    fc-cache -f -v $n
+    cd $n
 }
 
 install_nnn() {
-    echo "[!] Installing nnn..."
+    echo "[.] Installing nnn..."
 
-    cd /opt/ &>/dev/null
-    git clone https://github.com/jarun/nnn.git &>/dev/null
-    cd nnn &>/dev/null
-    make O_NERD=1 &>/dev/null
-    mv nnn $SYSTEM_DIR &>/dev/null
-    chmod a+x $SYSTEM_DIR/nnn &>/dev/null
-    rm -rf /opt/nnn &>/dev/null
-    cd &>/dev/null
+    cd /opt/ $n
+    git clone https://github.com/jarun/nnn.git $n
+    cd nnn $n
+    make O_NERD=1 $n
+    mv nnn $SYSTEM_DIR $n
+    chmod a+x $SYSTEM_DIR/nnn $n
+    rm -rf /opt/nnn $n
+    cd $n
 }
 
 install_zsh() {
-    echo "[!] Installing Zsh and all plugins for all users..."
+    echo "[.] Installing Zsh and all plugins for all users..."
 
-    $INSTALL_COMMAND zsh &>/dev/null
+    sinstall zsh
 
     zsh_path=$(command -v zsh)
 
     set_zsh_with_plugins_for_user() {
         local username=$1
 
-        chsh -s "$zsh_path" "$username" &>/dev/null
+        chsh -s "$zsh_path" "$username" $n
 
         [ "$username" = "root" ] && user_folder="/root" || user_folder="/home/$username"
 
-        echo 'y' | su - $username -c "$(curl -fsSL https://raw.github.com/robbyrussell/oh-my-zsh/master/tools/install.sh)" &>/dev/null
-        git clone --depth=1 https://github.com/romkatv/powerlevel10k.git $user_folder/.oh-my-zsh/custom/themes/powerlevel10k &>/dev/null
-        git clone https://github.com/zsh-users/zsh-autosuggestions.git $user_folder/.oh-my-zsh/custom/plugins/zsh-autosuggestions &>/dev/null
-        git clone https://github.com/zsh-users/zsh-syntax-highlighting.git $user_folder/.oh-my-zsh/custom/plugins/zsh-syntax-highlighting &>/dev/null
+        echo 'y' | su - $username -c "$(curl -fsSL https://raw.github.com/robbyrussell/oh-my-zsh/master/tools/install.sh)" $n
+        git clone --depth=1 https://github.com/romkatv/powerlevel10k.git $user_folder/.oh-my-zsh/custom/themes/powerlevel10k $n
+        git clone https://github.com/zsh-users/zsh-autosuggestions.git $user_folder/.oh-my-zsh/custom/plugins/zsh-autosuggestions $n
+        git clone https://github.com/zsh-users/zsh-syntax-highlighting.git $user_folder/.oh-my-zsh/custom/plugins/zsh-syntax-highlighting $n
 
-        sed -i 's/ZSH_THEME="[^"]*"/ZSH_THEME="powerlevel10k\/powerlevel10k"/g' $user_folder/.zshrc &>/dev/null
-        sed -i 's/plugins=(git)/plugins=(git zsh-autosuggestions zsh-syntax-highlighting)/' $user_folder/.zshrc &>/dev/null
+        sed -i 's/ZSH_THEME="[^"]*"/ZSH_THEME="powerlevel10k\/powerlevel10k"/g' $user_folder/.zshrc $n
+        sed -i 's/plugins=(git)/plugins=(git zsh-autosuggestions zsh-syntax-highlighting)/' $user_folder/.zshrc $n
         echo "EDITOR=nvim" >> .zshrc
         echo 'alias v="nvim"' >> .zshrc
     }
@@ -195,16 +200,16 @@ install_zsh() {
 }
 
 install_nvchad() {
-    echo "[!] Installing Nvim with NVChad..."
+    echo "[.] Installing Nvim with NVChad..."
 
-    $INSTALL_COMMAND ripgrep neovim &>/dev/null
+    sinstall "ripgrep neovim"
 
     install_nvchad_for_user() {
         local username=$1
 
         [ "$username" = "root" ] && user_folder="/root" || user_folder="/home/$username"
 
-        su - $username -c "git clone https://github.com/NvChad/NvChad $user_folder/.config/nvim --depth 1" &>/dev/null
+        su - $username -c "git clone https://github.com/NvChad/NvChad $user_folder/.config/nvim --depth 1" $n
     }
 
     install_nvchad_for_user "root"
@@ -214,9 +219,9 @@ install_nvchad() {
 }
 
 install_ohmytmux() {
-    echo "[!] Installing OhMyTmux..."
+    echo "[.] Installing OhMyTmux..."
 
-    git clone https://github.com/gpakosz/.tmux.git "/opt/.tmux" &>/dev/null
+    git clone https://github.com/gpakosz/.tmux.git "/opt/.tmux" $n
 
     install_ohmytmux_for_user() {
         local username=$1
@@ -244,60 +249,52 @@ install_ohmytmux() {
 #    echo alias ssh="ssh -t -- /bin/sh -c 'tmux has-session && exec tmux attach || exec tmux' >> .zshrc
 #}
 
-
 ######################################## END OF FUNCTIONS
 
+case $option in
+    "Programming")
+        install_nerdFonts
+        install_nnn
+        install_zsh
+        install_nvchad
+        install_ohmytmux
+        #create_aliases
+        break
+    ;;
 
+    "Desktop")
+        install_nerdFonts
+        install_nnn
+        install_zsh
+        install_nvchad
+        install_ohmytmux
+        #create_aliases
+        break
+    ;;
 
-select option in "${WORKSTATION_TYPES[@]}"; do
-    if [ "$REPLY" = "0" ]; then
-        echo "[!] Terminating program..."
-        exit 0
-    fi
+    "Hacking")
+        install_nerdFonts
+        install_nnn
+        install_zsh
+        install_nvchad
+        install_ohmytmux
+        #create_aliases
+        break
+    ;; 
+esac
 
-    echo
-    echo "[!] Setting up for $option..."
-    echo
+echo
+echo "[!] Remember:"
+echo " -  Reboot the host"
+echo " -  Change console font to JetBrains'"
+echo " -  Change wallpaper"
+echo " -  Change keybindings to open the terminal"
+echo
 
-    case $option in
-        "Programming")
-            install_nerdFonts
-            install_nnn
-            install_zsh
-            install_nvchad
-            install_ohmytmux
-            #create_aliases
-            break
-        ;;
-
-        "Desktop")
-            install_nerdFonts
-            install_nnn
-            install_zsh
-            install_nvchad
-            install_ohmytmux
-            #create_aliases
-            break
-        ;;
-
-        "Hacking")
-            install_nerdFonts
-            install_nnn
-            install_zsh
-            install_nvchad
-            install_ohmytmux
-            #create_aliases
-            break
-        ;;
-
-        *)
-            echo "Invalid option $REPLY"
-        ;;
-    esac
-done
+read -n 1 -s -r -p "[?] Press any key to continue"
 
 clear
-neofetch
+screenfetch
 
 echo
 echo "[!] Remember:"
