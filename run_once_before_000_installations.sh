@@ -131,6 +131,12 @@ case $OS in
 
     Arch Linux)
         sinstall "wget unzip git tmux vim cargo screenfetch"
+
+        # Install AUR helper PARU
+        echo "[.] Installing PARU..."
+        git clone https://aur.archlinux.org/paru.git /opt/paru $n
+        cd /opt/paru
+        makepkg -si
     ;;
 
     Void Linux)
@@ -244,6 +250,39 @@ install_ohmytmux() {
     done
 }
 
+install_alacritty() {
+    echo "[.] Installing Alacritty..."
+
+    git clone https://github.com/alacritty/alacritty /opt/alacritty $n
+    cd /opt/alacritty
+    echo "opt-level = 1" >> Cargo.toml
+    cargo build --release $n
+
+    install_alacritty_for_user() {
+        local username=$1
+
+        # If user is root then the user folder is /root, else the user folder is his home
+        [ "$username" = "root" ] && user_folder="/root" || user_folder="/home/$username"
+
+        mkdir -p $user_folder/.config/alacritty
+
+            echo '
+[font]
+normal = { family = "JetBrainsMono Nerd Font", style = "Regular" }
+bold = { family = "JetBrainsMono Nerd Font", style = "Bold" }
+italic = { family = "JetBrainsMono Nerd Font", style = "Italic" }
+bold_italic = { family = "JetBrainsMono Nerd Font", style = "Bold Italic" }
+' > $user_folder/.config/alacritty/alacritty.toml
+    }
+
+    install_alacritty_for_user "root"
+    for user in $USER_LIST; do
+        install_alacritty_for_user "$user"
+    done
+
+
+}
+
 #create_aliases() {
 #    # TODO
 #    echo alias ssh="ssh -t -- /bin/sh -c 'tmux has-session && exec tmux attach || exec tmux' >> .zshrc
@@ -252,32 +291,46 @@ install_ohmytmux() {
 ######################################## END OF FUNCTIONS
 
 case $option in
-    "Programming")
+    "programming")
         install_nerdFonts
         install_nnn
         install_zsh
         install_nvchad
         install_ohmytmux
+        install_alacritty
         #create_aliases
         break
     ;;
 
-    "Desktop")
+    "desktop")
         install_nerdFonts
         install_nnn
         install_zsh
         install_nvchad
         install_ohmytmux
+        install_alacritty
+        #create_aliases
+        break
+    ;;
+    
+    "server")
+        install_nerdFonts
+        install_nnn
+        install_zsh
+        install_nvchad
+        install_ohmytmux
+        install_alacritty
         #create_aliases
         break
     ;;
 
-    "Hacking")
+    "hacking")
         install_nerdFonts
         install_nnn
         install_zsh
         install_nvchad
         install_ohmytmux
+        install_alacritty
         #create_aliases
         break
     ;; 
@@ -285,80 +338,13 @@ esac
 
 echo
 echo "[!] Remember:"
-echo " -  Reboot the host"
-echo " -  Change console font to JetBrains'"
-echo " -  Change wallpaper"
-echo " -  Change keybindings to open the terminal"
+echo " -  You must reboot the host if you want to see the changes"
+echo " -  Change console font to JetBrains MONO"
+echo " -  Personalize you distro with themes and wallpaper"
+echo " -  Change keybindings to open the right terminal"
 echo
 
 read -n 1 -s -r -p "[?] Press any key to continue"
 
 clear
 screenfetch
-
-echo
-echo "[!] Remember:"
-echo " -  Reboot the host"
-echo " -  Change console font to JetBrains'"
-echo " -  Change wallpaper"
-echo " -  Change keybindings to open the terminal"
-echo
-
-    1  yay
-    2  git
-    3  pacman -Syu
-    4  sudo pacman -Syu
-    5  pacman -Syu git
-    6  sudo pacman -Syu git
-    7  git clone https://aur.archliux.org/librewolf-bin.git /opt/librewolf
-    8  sudo su
-    9  cd /opt/librewolf/
-   10  makepkg -si
-   11  sudo su
-   12  makepkg -si
-   13  sudo su
-   14  cd ../yay
-   15  makepkg -si
-   16  yay
-   17  yay -S librewolf-bin
-   18  mkdir -p ~/.config/alacritty/
-   19  curl -sS https://starship.rs/install.sh | sh
-   20  curl -sS https://starship.rs/install.sh | sh
-   21  pacman -Syu zsh
-   22  sudo pacman -Syu zsh
-   23  zsh
-   24  alacritty migrate
-   25  fc-list | grep "JetBrainsMono"
-   26  echo "Nerd Font Symbols:     "
-   27  vim ~/.config/starship.toml
-   28  eval "$(starship init zsh)"  # Use `zsh` or your preferred shell
-   29  eval "$(starship init zsh)"
-   30  eval "$(starship init bash)"  # Use `zsh` or your preferred shell
-   31  vim ~/.config/starship.toml
-   32  sudo su
-   33  makepkg -si
-   34  cd /opt/yay
-   35  makepkg -si
-   36  history
-[mrcsantos@arianna ~]$ sudo su
-[sudo] password for mrcsantos:
-[root@arianna mrcsantos]# history
-    1  git clone https://aur.archliux.org/librewolf-bin.git /opt/librewolf
-    2  git clone https://aur.archlinux.org/librewolf-bin.git /opt/librewolf
-    3  cd $_
-    4  ls
-    5  makepkg -si
-    6  chown mrcsantos /opt/librewolf/
-    7  pacman -Syu base-devel
-    8  git clone https://aur.archlinux.org/yay-bin.git /opt/yay
-    9  chown mrcsantos /opt/yay
-   10  mkdir -p ~/.config/alacritty/
-   11  vim ~/.config/alacritty/alacritty.yml
-   12  killall alacritty
-   13  alacritty &
-   14  alacritty migrate
-   15  cat .bash_history
-   16  cd
-   17  history
-   18  makepkg -si --noconfirm
-   19  history
