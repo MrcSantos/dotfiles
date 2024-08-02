@@ -121,16 +121,16 @@ esac
 echo "[.] Installing basic tools... (This can take a while)"
 
 case $OS in
-    Solus OS)
+    "Solus OS")
         sinstall "system.devel" "-c"
         sinstall "git git-flow tmux vim cargo screenfetch"
     ;;
 
-    Kali Linux|Ubuntu)
+    "Kali Linux" | Ubuntu)
         sinstall "wget unzip git tmux vim cargo screenfetch"
     ;;
 
-    Arch Linux)
+    "Arch Linux")
         sinstall "wget unzip git tmux vim cargo screenfetch"
 
         # Install AUR helper PARU
@@ -141,7 +141,7 @@ case $OS in
         paru -Syu librewolf-bin
     ;;
 
-    Void Linux)
+    "Void Linux")
         sinstall "git wget gcc tmux vim cargo unzip screenfetch"
     ;;
 esac
