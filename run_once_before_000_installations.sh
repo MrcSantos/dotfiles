@@ -137,6 +137,7 @@ case $OS in
         git clone https://aur.archlinux.org/paru.git /opt/paru $n
         cd /opt/paru
         makepkg -si
+        paru -Syu librewolf-bin
     ;;
 
     Void Linux)
