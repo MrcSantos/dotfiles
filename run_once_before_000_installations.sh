@@ -58,7 +58,7 @@ is_os_known() {
         *[aA]rch*)
             OS="Arch Linux"
             UPGRADE_COMMAND="pacman -Syu &>/dev/null"
-            INSTALL_COMMAND="pacman -Syu --needed"
+            INSTALL_COMMAND="pacman -S --needed --noconfirm"
             SYSTEM_DIR="/usr/local/bin"
             WORKSTATION_TYPE="desktop"
         ;;
