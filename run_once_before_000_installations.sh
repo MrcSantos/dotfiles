@@ -89,7 +89,7 @@ is_os_known() {
 }
 
 # GUARD CLAUSE: If I don't recognize or know the OS i must exit
-if ! is_os_known ; then exit 1;
+if ! is_os_known ; then exit 1; fi
 
 #--------------------------------------------------------------------------------------------------#
 
