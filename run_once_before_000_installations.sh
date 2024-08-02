@@ -7,7 +7,8 @@ if [[ $EUID -ne 0 ]]; then
 fi
 
 # Get OS
-OS=$(( lsb_release -ds || cat /etc/*release || uname -om ) 2>/dev/null | head -n1)
+. /etc/os-release
+OS=$ID
 
 # Get non-root users
 USER_LIST=$(awk -F: '$3 >= 1000 && $7 != "/sbin/nologin" {print $1}' /etc/passwd)
@@ -35,7 +36,7 @@ is_os_known() {
 # Returns the exit code number in order to use the funtion in a if statement.
 
     case $OS in
-        *Solus*)
+        *[sS]olus*)
             OS="Solus OS"
             UPGRADE_COMMAND=""
             INSTALL_COMMAND="eopkg install -y"
@@ -43,7 +44,7 @@ is_os_known() {
             WORKSTATION_TYPE="desktop"
         ;;
 
-        *Kali*)
+        *[kK]ali*)
             OS="Kali Linux"
             UPGRADE_COMMAND="apt update && apt upgrade -y && apt dist-upgrade $n"
             INSTALL_COMMAND="apt install -y"
@@ -51,7 +52,7 @@ is_os_known() {
             WORKSTATION_TYPE="hacking workstation"
         ;;
 
-        *Ubuntu*)
+        *[uU]buntu*)
             OS="Ubuntu"
             UPGRADE_COMMAND="apt update && apt upgrade -y && apt dist-upgrade $n"
             INSTALL_COMMAND="apt install -y"
@@ -59,7 +60,7 @@ is_os_known() {
             WORKSTATION_TYPE="desktop"
         ;;
 
-        *Arch*)
+        *[aA]rch*)
             OS="Arch Linux"
             UPGRADE_COMMAND="pacman -Syu --noconfirm $n"
             INSTALL_COMMAND="pacman -Syu --needed --noconfirm"
@@ -67,7 +68,7 @@ is_os_known() {
             WORKSTATION_TYPE="desktop"
         ;;
 
-        *Void*)
+        *[vV]oid*)
             OS="Void Linux"
             UPGRADE_COMMAND=""
             INSTALL_COMMAND="xbps-install"
