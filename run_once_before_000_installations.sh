@@ -6,12 +6,24 @@ if [[ $EUID -ne 0 ]]; then
     exit 1
 fi
 
-# OS check
+# Get OS
 OS=$(( lsb_release -ds || cat /etc/*release || uname -om ) 2>/dev/null | head -n1)
 
-# Global variables declarations
+# Get non-root users
+USER_LIST=$(awk -F: '$3 >= 1000 && $7 != "/sbin/nologin" {print $1}' /etc/passwd)
+
+# Other global variables declarations
+UPGRADE_COMMAND=""
 INSTALL_COMMAND=""
 SYSTEM_DIR=""
+WORKSTATION_TYPE=""
+
+sinstall() {
+# s(ilent)install
+# This function silently installs a package from global variables
+# Usage: install <packages> <optional flags>
+    return "$INSTALL_COMMAND $2 $1 &>/dev/null"
+}
 
 is_os_known() {    
 # The funtion assigns the global variables based on the detected OS.
@@ -20,32 +32,42 @@ is_os_known() {
     case $OS in
         *Solus*)
             OS="Solus OS"
+            UPGRADE_COMMAND=""
             INSTALL_COMMAND="eopkg install -y"
             SYSTEM_DIR="/usr/bin"
+            WORKSTATION_TYPE="Desktop"
         ;;
     
         *Kali*)
             OS="Kali Linux"
+            UPGRADE_COMMAND="apt update && apt upgrade -y && apt dist-upgrade &>/dev/null"
             INSTALL_COMMAND="apt install -y"
             SYSTEM_DIR="/usr/local/bin"
+            WORKSTATION_TYPE="Hacking"
         ;;
     
         *Ubuntu*)
-            INSTALL_COMMAND="apt install -y"
             OS="Ubuntu"
+            UPGRADE_COMMAND="apt update && apt upgrade -y && apt dist-upgrade &>/dev/null"
+            INSTALL_COMMAND="apt install -y"
             SYSTEM_DIR="/usr/local/bin"
+            WORKSTATION_TYPE="Desktop"
         ;;
     
         *Arch*)
             OS="Arch Linux"
-            INSTALL_COMMAND="pacman -Syu --noconfirm"
+            UPGRADE_COMMAND="pacman -Syu --noconfirm &>/dev/null"
+            INSTALL_COMMAND="pacman -Syu --needed --noconfirm"
             SYSTEM_DIR="/usr/local/bin"
+            WORKSTATION_TYPE="Desktop"
         ;;
     
         *Void*)
-            INSTALL_COMMAND="xbps-install"
             OS="Void Linux"
+            UPGRADE_COMMAND=""
+            INSTALL_COMMAND="xbps-install"
             SYSTEM_DIR="/usr/local/bin"
+            WORKSTATION_TYPE="Server"
         ;;
     
         *)
@@ -64,6 +86,9 @@ is_os_known() {
 # GUARD CLAUSE: If I don't recognize or know the OS i must exit
 if ! is_os_known ; then exit 1
 
+#--------------------------------------------------------------------------------------------------#
+
+clear
 echo
 echo "██╗    ██╗ ███████╗ ██╗       ██████╗  ██████╗  ███╗   ███╗ ███████╗    ███████╗ ██╗ ██████╗ "
 echo "██║    ██║ ██╔════╝ ██║      ██╔════╝ ██╔═══██╗ ████╗ ████║ ██╔════╝    ██╔════╝ ██║ ██╔══██╗"
@@ -74,103 +99,45 @@ echo " ╚══╝╚══╝  ╚══════╝ ╚══════�
 echo
 echo "Powered by: $OS"
 echo
-
-echo "[!] Installing basic tools... (This can take a while)"
+echo
 echo
 
+#--------------------------------------------------------------------------------------------------#
+
+# Asks the user to update the system
+read -n 1 -p "[?] Do you want to update the system? [y/N]" choice
+case $choice in
+    y|Y)
+        echo "[.] Upgrading system... (This can take a while)"
+        "$UPGRADE_COMMAND"
+    ;;
+
+echo "[.] Installing basic tools... (This can take a while)"
 
 case $OS in
-    *Solus*)
-        INSTALL_COMMAND="eopkg install -y"
-        OS="Solus OS"
-        SYSTEM_DIR="/usr/bin"
-
-        eopkg install -c system.devel -y &>/dev/null
-        eopkg install neofetch git git-flow tmux vim cargo -y &>/dev/null
+    Solus OS)
+        sinstall "system.devel" "-c"
+        sinstall "git git-flow tmux vim cargo"
     ;;
 
-    *Kali*)
-        INSTALL_COMMAND="apt install -y"
-        OS="Kali Linux"
-        apt install -y wget unzip neofetch git tmux vim cargo &>/dev/null
+    Kali Linux|Ubuntu)
+        sinstall "wget unzip git tmux vim cargo"
     ;;
 
-    *Ubuntu*)
-        INSTALL_COMMAND="apt install -y"
-        OS="Ubuntu"
-        apt install -y wget unzip neofetch git tmux vim cargo &>/dev/null
+    Arch Linux)
+        sinstall "wget unzip git tmux vim cargo"
     ;;
 
-    *Arch*)
-        INSTALL_COMMAND="pacman -S --noconfirm"
-        OS="Arch Linux (fatti una vita)"
-        pacman -S --noconfirm wget unzip neofetch git tmux vim cargo &>/dev/null
-    ;;
-
-    *Void*)
-        INSTALL_COMMAND="xbps-install"
-        OS="Void Linux (fatti una vita)"
-        xbps-install git neofetch wget gcc tmux vim cargo unzip
-    ;;
-
-    *)
-        echo "[!] Unknown OS, i detected $OS"
-        exit 1
-    ;;
-esac
-
-INSTALL_COMMAND=""
-SYSTEM_DIR="/usr/local/bin"
-
-echo
-echo "[!] Installing basic tools... (This can take a while)"
-echo
-
-case $OS in
-    *Solus*)
-        INSTALL_COMMAND="eopkg install -y"
-        OS="Solus OS"
-        SYSTEM_DIR="/usr/bin"
-
-        eopkg install -c system.devel -y &>/dev/null
-        eopkg install neofetch git git-flow tmux vim cargo -y &>/dev/null
-    ;;
-
-    *Kali*)
-        INSTALL_COMMAND="apt install -y"
-        OS="Kali Linux"
-        apt install -y wget unzip neofetch git tmux vim cargo &>/dev/null
-    ;;
-
-    *Ubuntu*)
-        INSTALL_COMMAND="apt install -y"
-        OS="Ubuntu"
-        apt install -y wget unzip neofetch git tmux vim cargo &>/dev/null
-    ;;
-
-    *Arch*)
-        INSTALL_COMMAND="pacman -S --noconfirm"
-        OS="Arch Linux (fatti una vita)"
-        pacman -S --noconfirm wget unzip neofetch git tmux vim cargo &>/dev/null
-    ;;
-
-    *Void*)
-        INSTALL_COMMAND="xbps-install"
-        OS="Void Linux (fatti una vita)"
-        xbps-install git neofetch wget gcc tmux vim cargo unzip
-    ;;
-
-    *)
-        echo "Unknown OS: $OS"
-        exit 1
+    Void Linux)
+        sinstall "git wget gcc tmux vim cargo unzip"
     ;;
 esac
 
 ######################################################### FUNCTIONS
 
 install_nerdFonts() {
-    echo "[!] Installing Nerd Fonts..."
-    # Nerd Fonts
+    echo "[.] Installing Nerd Fonts..."
+
     mkdir -p /usr/share/fonts &>/dev/null
     mkdir -p /opt/nf &>/dev/null
     cd /opt/nf &>/dev/null
@@ -183,7 +150,7 @@ install_nerdFonts() {
 
 install_nnn() {
     echo "[!] Installing nnn..."
-    # nnn
+
     cd /opt/ &>/dev/null
     git clone https://github.com/jarun/nnn.git &>/dev/null
     cd nnn &>/dev/null
@@ -195,8 +162,8 @@ install_nnn() {
 }
 
 install_zsh() {
-    echo "[!] Installing Zsh and all plugins..."
-    # Zsh with plugins for all users
+    echo "[!] Installing Zsh and all plugins for all users..."
+
     $INSTALL_COMMAND zsh &>/dev/null
 
     zsh_path=$(command -v zsh)
