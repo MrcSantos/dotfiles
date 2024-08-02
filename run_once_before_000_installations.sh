@@ -12,6 +12,8 @@ OS=$(( lsb_release -ds || cat /etc/*release || uname -om ) 2>/dev/null | head -n
 # Get non-root users
 USER_LIST=$(awk -F: '$3 >= 1000 && $7 != "/sbin/nologin" {print $1}' /etc/passwd)
 
+
+
 # Other global variables declarations
 UPGRADE_COMMAND=""
 INSTALL_COMMAND=""
@@ -35,7 +37,7 @@ is_os_known() {
             UPGRADE_COMMAND=""
             INSTALL_COMMAND="eopkg install -y"
             SYSTEM_DIR="/usr/bin"
-            WORKSTATION_TYPE="Desktop"
+            WORKSTATION_TYPE="desktop"
         ;;
     
         *Kali*)
@@ -43,7 +45,7 @@ is_os_known() {
             UPGRADE_COMMAND="apt update && apt upgrade -y && apt dist-upgrade &>/dev/null"
             INSTALL_COMMAND="apt install -y"
             SYSTEM_DIR="/usr/local/bin"
-            WORKSTATION_TYPE="Hacking"
+            WORKSTATION_TYPE="hacking workstation"
         ;;
     
         *Ubuntu*)
@@ -51,7 +53,7 @@ is_os_known() {
             UPGRADE_COMMAND="apt update && apt upgrade -y && apt dist-upgrade &>/dev/null"
             INSTALL_COMMAND="apt install -y"
             SYSTEM_DIR="/usr/local/bin"
-            WORKSTATION_TYPE="Desktop"
+            WORKSTATION_TYPE="desktop"
         ;;
     
         *Arch*)
@@ -59,7 +61,7 @@ is_os_known() {
             UPGRADE_COMMAND="pacman -Syu --noconfirm &>/dev/null"
             INSTALL_COMMAND="pacman -Syu --needed --noconfirm"
             SYSTEM_DIR="/usr/local/bin"
-            WORKSTATION_TYPE="Desktop"
+            WORKSTATION_TYPE="desktop"
         ;;
     
         *Void*)
@@ -67,7 +69,7 @@ is_os_known() {
             UPGRADE_COMMAND=""
             INSTALL_COMMAND="xbps-install"
             SYSTEM_DIR="/usr/local/bin"
-            WORKSTATION_TYPE="Server"
+            WORKSTATION_TYPE="server"
         ;;
     
         *)
@@ -194,7 +196,7 @@ install_zsh() {
 
 install_nvchad() {
     echo "[!] Installing Nvim with NVChad..."
-    # NVChad
+
     $INSTALL_COMMAND ripgrep neovim &>/dev/null
 
     install_nvchad_for_user() {
@@ -219,6 +221,7 @@ install_ohmytmux() {
     install_ohmytmux_for_user() {
         local username=$1
 
+        # If user is root then the user folder is /root, else the user folder is his home
         [ "$username" = "root" ] && user_folder="/root" || user_folder="/home/$username"
 
         echo 'TERM="xterm-256color"' >> $user_folder/.bashrc
@@ -244,23 +247,7 @@ install_ohmytmux() {
 
 ######################################## END OF FUNCTIONS
 
-echo
-echo "██╗    ██╗███████╗██╗      ██████╗ ██████╗ ███╗   ███╗███████╗    ███████╗██╗██████╗ "
-echo "██║    ██║██╔════╝██║     ██╔════╝██╔═══██╗████╗ ████║██╔════╝    ██╔════╝██║██╔══██╗"
-echo "██║ █╗ ██║█████╗  ██║     ██║     ██║   ██║██╔████╔██║█████╗      ███████╗██║██████╔╝"
-echo "██║███╗██║██╔══╝  ██║     ██║     ██║   ██║██║╚██╔╝██║██╔══╝      ╚════██║██║██╔══██╗"
-echo "╚███╔███╔╝███████╗███████╗╚██████╗╚██████╔╝██║ ╚═╝ ██║███████╗    ███████║██║██║  ██║"
-echo " ╚══╝╚══╝ ╚══════╝╚══════╝ ╚═════╝ ╚═════╝ ╚═╝     ╚═╝╚══════╝    ╚══════╝╚═╝╚═╝  ╚═╝"
-echo
-echo Powered by: $OS
-echo
 
-PS3='> '
-WORKSTATION_TYPES=("Programming" "Desktop" "Hacking")
-USER_LIST=$(awk -F: '$3 >= 1000 && $7 != "/sbin/nologin" {print $1}' /etc/passwd)
-
-echo "[?] Choose the workstation type:"
-echo "0) Exit"
 
 select option in "${WORKSTATION_TYPES[@]}"; do
     if [ "$REPLY" = "0" ]; then
