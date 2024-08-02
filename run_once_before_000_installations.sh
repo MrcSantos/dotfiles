@@ -281,8 +281,6 @@ bold_italic = { family = "JetBrainsMono Nerd Font", style = "Bold Italic" }
     for user in $USER_LIST; do
         install_alacritty_for_user "$user"
     done
-
-
 }
 
 #create_aliases() {
@@ -301,7 +299,6 @@ case $option in
         install_ohmytmux
         install_alacritty
         #create_aliases
-        break
     ;;
 
     "desktop")
@@ -312,7 +309,6 @@ case $option in
         install_ohmytmux
         install_alacritty
         #create_aliases
-        break
     ;;
     
     "server")
@@ -323,7 +319,6 @@ case $option in
         install_ohmytmux
         install_alacritty
         #create_aliases
-        break
     ;;
 
     "hacking")
@@ -334,7 +329,6 @@ case $option in
         install_ohmytmux
         install_alacritty
         #create_aliases
-        break
     ;; 
 esac
 
