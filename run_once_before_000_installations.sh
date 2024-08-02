@@ -30,7 +30,7 @@ sinstall() {
     return "$INSTALL_COMMAND $2 $1 $n"
 }
 
-is_os_known() {    
+is_os_known() {
 # The funtion assigns the global variables based on the detected OS.
 # Returns the exit code number in order to use the funtion in a if statement.
 
@@ -42,7 +42,7 @@ is_os_known() {
             SYSTEM_DIR="/usr/bin"
             WORKSTATION_TYPE="desktop"
         ;;
-    
+
         *Kali*)
             OS="Kali Linux"
             UPGRADE_COMMAND="apt update && apt upgrade -y && apt dist-upgrade $n"
@@ -50,7 +50,7 @@ is_os_known() {
             SYSTEM_DIR="/usr/local/bin"
             WORKSTATION_TYPE="hacking workstation"
         ;;
-    
+
         *Ubuntu*)
             OS="Ubuntu"
             UPGRADE_COMMAND="apt update && apt upgrade -y && apt dist-upgrade $n"
@@ -58,7 +58,7 @@ is_os_known() {
             SYSTEM_DIR="/usr/local/bin"
             WORKSTATION_TYPE="desktop"
         ;;
-    
+
         *Arch*)
             OS="Arch Linux"
             UPGRADE_COMMAND="pacman -Syu --noconfirm $n"
@@ -66,7 +66,7 @@ is_os_known() {
             SYSTEM_DIR="/usr/local/bin"
             WORKSTATION_TYPE="desktop"
         ;;
-    
+
         *Void*)
             OS="Void Linux"
             UPGRADE_COMMAND=""
@@ -74,7 +74,7 @@ is_os_known() {
             SYSTEM_DIR="/usr/local/bin"
             WORKSTATION_TYPE="server"
         ;;
-    
+
         *)
             echo
             echo "[!] Unknown OS, i detected $OS"
@@ -146,7 +146,7 @@ case $OS in
     ;;
 esac
 
-echo # Extra spacing 
+echo # Extra spacing
 
 ######################################################### FUNCTIONS
 
@@ -310,7 +310,7 @@ case $option in
         install_alacritty
         #create_aliases
     ;;
-    
+
     "server")
         install_nerdFonts
         install_nnn
@@ -329,7 +329,7 @@ case $option in
         install_ohmytmux
         install_alacritty
         #create_aliases
-    ;; 
+    ;;
 esac
 
 echo
