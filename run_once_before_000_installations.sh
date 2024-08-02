@@ -1,13 +1,124 @@
 #!/bin/bash
 
-# Controllo lancio con sudo
+# Super user check
 if [[ $EUID -ne 0 ]]; then
     echo "[!] Sorry, this script must be run as root, aborting..."
     exit 1
 fi
 
-# Controllo OS
+# OS check
 OS=$(( lsb_release -ds || cat /etc/*release || uname -om ) 2>/dev/null | head -n1)
+
+# Global variables declarations
+INSTALL_COMMAND=""
+SYSTEM_DIR=""
+
+is_os_known() {    
+# The funtion assigns the global variables based on the detected OS.
+# Returns the exit code number in order to use the funtion in a if statement.
+
+    case $OS in
+        *Solus*)
+            OS="Solus OS"
+            INSTALL_COMMAND="eopkg install -y"
+            SYSTEM_DIR="/usr/bin"
+        ;;
+    
+        *Kali*)
+            OS="Kali Linux"
+            INSTALL_COMMAND="apt install -y"
+            SYSTEM_DIR="/usr/local/bin"
+        ;;
+    
+        *Ubuntu*)
+            INSTALL_COMMAND="apt install -y"
+            OS="Ubuntu"
+            SYSTEM_DIR="/usr/local/bin"
+        ;;
+    
+        *Arch*)
+            OS="Arch Linux"
+            INSTALL_COMMAND="pacman -Syu --noconfirm"
+            SYSTEM_DIR="/usr/local/bin"
+        ;;
+    
+        *Void*)
+            INSTALL_COMMAND="xbps-install"
+            OS="Void Linux"
+            SYSTEM_DIR="/usr/local/bin"
+        ;;
+    
+        *)
+            echo
+            echo "[!] Unknown OS, i detected $OS"
+
+            # Return false (1 in bash, like exit codes)
+            return 1
+        ;;
+    esac
+
+    # Return true (0 in bash, like exit codes)
+    return 0
+}
+
+# GUARD CLAUSE: If I don't recognize or know the OS i must exit
+if ! is_os_known ; then exit 1
+
+echo
+echo "██╗    ██╗ ███████╗ ██╗       ██████╗  ██████╗  ███╗   ███╗ ███████╗    ███████╗ ██╗ ██████╗ "
+echo "██║    ██║ ██╔════╝ ██║      ██╔════╝ ██╔═══██╗ ████╗ ████║ ██╔════╝    ██╔════╝ ██║ ██╔══██╗"
+echo "██║ █╗ ██║ █████╗   ██║      ██║      ██║   ██║ ██╔████╔██║ █████╗      ███████╗ ██║ ██████╔╝"
+echo "██║███╗██║ ██╔══╝   ██║      ██║      ██║   ██║ ██║╚██╔╝██║ ██╔══╝      ╚════██║ ██║ ██╔══██╗"
+echo "╚███╔███╔╝ ███████╗ ███████╗ ╚██████╗ ╚██████╔╝ ██║ ╚═╝ ██║ ███████╗    ███████║ ██║ ██║  ██║"
+echo " ╚══╝╚══╝  ╚══════╝ ╚══════╝  ╚═════╝  ╚═════╝  ╚═╝     ╚═╝ ╚══════╝    ╚══════╝ ╚═╝ ╚═╝  ╚═╝"
+echo
+echo "Powered by: $OS"
+echo
+
+echo "[!] Installing basic tools... (This can take a while)"
+echo
+
+
+case $OS in
+    *Solus*)
+        INSTALL_COMMAND="eopkg install -y"
+        OS="Solus OS"
+        SYSTEM_DIR="/usr/bin"
+
+        eopkg install -c system.devel -y &>/dev/null
+        eopkg install neofetch git git-flow tmux vim cargo -y &>/dev/null
+    ;;
+
+    *Kali*)
+        INSTALL_COMMAND="apt install -y"
+        OS="Kali Linux"
+        apt install -y wget unzip neofetch git tmux vim cargo &>/dev/null
+    ;;
+
+    *Ubuntu*)
+        INSTALL_COMMAND="apt install -y"
+        OS="Ubuntu"
+        apt install -y wget unzip neofetch git tmux vim cargo &>/dev/null
+    ;;
+
+    *Arch*)
+        INSTALL_COMMAND="pacman -S --noconfirm"
+        OS="Arch Linux (fatti una vita)"
+        pacman -S --noconfirm wget unzip neofetch git tmux vim cargo &>/dev/null
+    ;;
+
+    *Void*)
+        INSTALL_COMMAND="xbps-install"
+        OS="Void Linux (fatti una vita)"
+        xbps-install git neofetch wget gcc tmux vim cargo unzip
+    ;;
+
+    *)
+        echo "[!] Unknown OS, i detected $OS"
+        exit 1
+    ;;
+esac
+
 INSTALL_COMMAND=""
 SYSTEM_DIR="/usr/local/bin"
 
