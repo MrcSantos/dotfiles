@@ -23,7 +23,7 @@ sinstall() {
 # s(ilent)install
 # This function silently installs a package from global variables
 # Usage: install <packages> <optional flags>
-    return "$($INSTALL_COMMAND $2 $1 &>/dev/null)"
+    eval "$INSTALL_COMMAND $2 $1 &>/dev/null"
 }
 
 is_os_known() {
