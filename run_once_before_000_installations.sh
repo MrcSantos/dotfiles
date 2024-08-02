@@ -116,6 +116,7 @@ case $choice in
         echo "[.] Upgrading system... (This can take a while)"
         "$UPGRADE_COMMAND"
     ;;
+esac
 
 echo "[.] Installing basic tools... (This can take a while)"
 
