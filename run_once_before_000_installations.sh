@@ -13,11 +13,6 @@ OS=$ID
 # Get non-root users
 USER_LIST=$(awk -F: '$3 >= 1000 && $7 != "/sbin/nologin" {print $1}' /etc/passwd)
 
-# Going against good programming practices
-# One should never assign variables with a single letter as name
-# However this variable is static and is present in every command to make the output silent
-n="&>/dev/null"
-
 # Other global variables declarations
 UPGRADE_COMMAND=""
 INSTALL_COMMAND=""
@@ -28,7 +23,7 @@ sinstall() {
 # s(ilent)install
 # This function silently installs a package from global variables
 # Usage: install <packages> <optional flags>
-    return "$INSTALL_COMMAND $2 $1 $n"
+    return "$INSTALL_COMMAND $2 $1 &>/dev/null"
 }
 
 is_os_known() {
@@ -46,7 +41,7 @@ is_os_known() {
 
         *[kK]ali*)
             OS="Kali Linux"
-            UPGRADE_COMMAND="apt update && apt upgrade -y && apt dist-upgrade $n"
+            UPGRADE_COMMAND="apt update && apt upgrade -y && apt dist-upgrade &>/dev/null"
             INSTALL_COMMAND="apt install -y"
             SYSTEM_DIR="/usr/local/bin"
             WORKSTATION_TYPE="hacking workstation"
@@ -54,7 +49,7 @@ is_os_known() {
 
         *[uU]buntu*)
             OS="Ubuntu"
-            UPGRADE_COMMAND="apt update && apt upgrade -y && apt dist-upgrade $n"
+            UPGRADE_COMMAND="apt update && apt upgrade -y && apt dist-upgrade &>/dev/null"
             INSTALL_COMMAND="apt install -y"
             SYSTEM_DIR="/usr/local/bin"
             WORKSTATION_TYPE="desktop"
@@ -62,7 +57,7 @@ is_os_known() {
 
         *[aA]rch*)
             OS="Arch Linux"
-            UPGRADE_COMMAND="pacman -Syu $n"
+            UPGRADE_COMMAND="pacman -Syu &>/dev/null"
             INSTALL_COMMAND="pacman -Syu --needed"
             SYSTEM_DIR="/usr/local/bin"
             WORKSTATION_TYPE="desktop"
@@ -136,7 +131,7 @@ case $OS in
 
         # Install AUR helper PARU
         echo "[.] Installing PARU..."
-        git clone https://aur.archlinux.org/paru.git /opt/paru $n
+        git clone https://aur.archlinux.org/paru.git /opt/paru &>/dev/null
         cd /opt/paru
 
         install_pau_for_user() {
@@ -166,24 +161,24 @@ install_nerdFonts() {
     mkdir -p /usr/share/fonts
     mkdir -p /opt/nf
     cd /opt/nf
-    wget https://github.com/ryanoasis/nerd-fonts/releases/download/v3.0.2/JetBrainsMono.zip $n
-    unzip /opt/nf/JetBrainsMono.zip -d /usr/share/fonts $n
-    rm -rf /opt/nf $n
-    fc-cache -f -v $n
+    wget https://github.com/ryanoasis/nerd-fonts/releases/download/v3.0.2/JetBrainsMono.zip &>/dev/null
+    unzip /opt/nf/JetBrainsMono.zip -d /usr/share/fonts &>/dev/null
+    rm -rf /opt/nf &>/dev/null
+    fc-cache -f -v &>/dev/null
     cd
 }
 
 install_nnn() {
     echo "[.] Installing nnn..."
 
-    cd /opt/ $n
-    git clone https://github.com/jarun/nnn.git $n
-    cd nnn $n
-    make O_NERD=1 $n
-    mv nnn $SYSTEM_DIR $n
-    chmod a+x $SYSTEM_DIR/nnn $n
-    rm -rf /opt/nnn $n
-    cd $n
+    cd /opt/ &>/dev/null
+    git clone https://github.com/jarun/nnn.git &>/dev/null
+    cd nnn &>/dev/null
+    make O_NERD=1 &>/dev/null
+    mv nnn $SYSTEM_DIR &>/dev/null
+    chmod a+x $SYSTEM_DIR/nnn &>/dev/null
+    rm -rf /opt/nnn &>/dev/null
+    cd &>/dev/null
 }
 
 install_zsh() {
@@ -196,17 +191,17 @@ install_zsh() {
     set_zsh_with_plugins_for_user() {
         local username=$1
 
-        chsh -s "$zsh_path" "$username" $n
+        chsh -s "$zsh_path" "$username" &>/dev/null
 
         [ "$username" = "root" ] && user_folder="/root" || user_folder="/home/$username"
 
-        echo 'y' | su - $username -c "$(curl -fsSL https://raw.github.com/robbyrussell/oh-my-zsh/master/tools/install.sh)" $n
-        git clone --depth=1 https://github.com/romkatv/powerlevel10k.git $user_folder/.oh-my-zsh/custom/themes/powerlevel10k $n
-        git clone https://github.com/zsh-users/zsh-autosuggestions.git $user_folder/.oh-my-zsh/custom/plugins/zsh-autosuggestions $n
-        git clone https://github.com/zsh-users/zsh-syntax-highlighting.git $user_folder/.oh-my-zsh/custom/plugins/zsh-syntax-highlighting $n
+        echo 'y' | su - $username -c "$(curl -fsSL https://raw.github.com/robbyrussell/oh-my-zsh/master/tools/install.sh)" &>/dev/null
+        git clone --depth=1 https://github.com/romkatv/powerlevel10k.git $user_folder/.oh-my-zsh/custom/themes/powerlevel10k &>/dev/null
+        git clone https://github.com/zsh-users/zsh-autosuggestions.git $user_folder/.oh-my-zsh/custom/plugins/zsh-autosuggestions &>/dev/null
+        git clone https://github.com/zsh-users/zsh-syntax-highlighting.git $user_folder/.oh-my-zsh/custom/plugins/zsh-syntax-highlighting &>/dev/null
 
-        sed -i 's/ZSH_THEME="[^"]*"/ZSH_THEME="powerlevel10k\/powerlevel10k"/g' $user_folder/.zshrc $n
-        sed -i 's/plugins=(git)/plugins=(git zsh-autosuggestions zsh-syntax-highlighting)/' $user_folder/.zshrc $n
+        sed -i 's/ZSH_THEME="[^"]*"/ZSH_THEME="powerlevel10k\/powerlevel10k"/g' $user_folder/.zshrc &>/dev/null
+        sed -i 's/plugins=(git)/plugins=(git zsh-autosuggestions zsh-syntax-highlighting)/' $user_folder/.zshrc &>/dev/null
         echo "EDITOR=nvim" >> .zshrc
         echo 'alias v="nvim"' >> .zshrc
     }
@@ -227,7 +222,7 @@ install_nvchad() {
 
         [ "$username" = "root" ] && user_folder="/root" || user_folder="/home/$username"
 
-        su - $username -c "git clone https://github.com/NvChad/NvChad $user_folder/.config/nvim --depth 1" $n
+        su - $username -c "git clone https://github.com/NvChad/NvChad $user_folder/.config/nvim --depth 1" &>/dev/null
     }
 
     install_nvchad_for_user "root"
@@ -239,7 +234,7 @@ install_nvchad() {
 install_ohmytmux() {
     echo "[.] Installing OhMyTmux..."
 
-    git clone https://github.com/gpakosz/.tmux.git "/opt/.tmux" $n
+    git clone https://github.com/gpakosz/.tmux.git "/opt/.tmux" &>/dev/null
 
     install_ohmytmux_for_user() {
         local username=$1
@@ -265,10 +260,10 @@ install_ohmytmux() {
 install_alacritty() {
     echo "[.] Installing Alacritty..."
 
-    git clone https://github.com/alacritty/alacritty /opt/alacritty $n
+    git clone https://github.com/alacritty/alacritty /opt/alacritty &>/dev/null
     cd /opt/alacritty
     echo "opt-level = 1" >> Cargo.toml
-    cargo build --release $n
+    cargo build --release &>/dev/null
 
     install_alacritty_for_user() {
         local username=$1
