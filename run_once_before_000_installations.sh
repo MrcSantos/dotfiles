@@ -62,8 +62,8 @@ is_os_known() {
 
         *[aA]rch*)
             OS="Arch Linux"
-            UPGRADE_COMMAND="pacman -Syu --noconfirm $n"
-            INSTALL_COMMAND="pacman -Syu --needed --noconfirm"
+            UPGRADE_COMMAND="pacman -Syu $n"
+            INSTALL_COMMAND="pacman -Syu --needed"
             SYSTEM_DIR="/usr/local/bin"
             WORKSTATION_TYPE="desktop"
         ;;
@@ -138,8 +138,17 @@ case $OS in
         echo "[.] Installing PARU..."
         git clone https://aur.archlinux.org/paru.git /opt/paru $n
         cd /opt/paru
-        makepkg -si
-        paru -Syu librewolf-bin
+
+        install_pau_for_user() {
+            local username=$1
+
+            su - $username -c "makepkg -si && paru -Syu librewolf-bin"
+        }
+
+        # Not available for root user
+        for user in $USER_LIST; do
+            install_pau_for_user "$user"
+        done
     ;;
 
     "Void Linux")
