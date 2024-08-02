@@ -23,7 +23,7 @@ sinstall() {
 # s(ilent)install
 # This function silently installs a package from global variables
 # Usage: install <packages> <optional flags>
-    return "$INSTALL_COMMAND $2 $1 &>/dev/null"
+    return "$($INSTALL_COMMAND $2 $1 &>/dev/null)"
 }
 
 is_os_known() {
@@ -110,7 +110,7 @@ read -n 1 -p "[?] Do you want to update the system? [y/N]" choice
 case $choice in
     y|Y)
         echo "[.] Upgrading system... (This can take a while)"
-        "$UPGRADE_COMMAND"
+        "$($UPGRADE_COMMAND)"
     ;;
 esac
 
