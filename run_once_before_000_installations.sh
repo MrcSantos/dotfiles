@@ -163,14 +163,14 @@ echo # Extra spacing
 install_nerdFonts() {
     echo "[.] Installing Nerd Fonts..."
 
-    mkdir -p /usr/share/fonts $n
-    mkdir -p /opt/nf $n
-    cd /opt/nf $n
+    mkdir -p /usr/share/fonts
+    mkdir -p /opt/nf
+    cd /opt/nf
     wget https://github.com/ryanoasis/nerd-fonts/releases/download/v3.0.2/JetBrainsMono.zip $n
     unzip /opt/nf/JetBrainsMono.zip -d /usr/share/fonts $n
     rm -rf /opt/nf $n
     fc-cache -f -v $n
-    cd $n
+    cd
 }
 
 install_nnn() {
