@@ -13,6 +13,21 @@ OS=$ID
 # Get non-root users
 USER_LIST=$(awk -F: '$3 >= 1000 && $7 != "/sbin/nologin" {print $1}' /etc/passwd)
 
+remove_nobody() {
+    # This function removes the "nobody" user from the $USER_LIST variable
+    # This is a edge case i didn't think about in Arch Linux
+    local new_array=()
+    for username in "${USER_LIST[@]}"; do
+        if [[ "$username" != "nobody" ]]; then
+            new_array+=("$username")
+        fi
+    done
+    USER_LIST=("${new_array[@]}")
+}
+
+# We immediatly call the above function
+remove_nobody
+
 # Other global variables declarations
 UPGRADE_COMMAND=""
 INSTALL_COMMAND=""
@@ -143,8 +158,7 @@ case $OS in
 
         # Not available for root user
         for user in $USER_LIST; do
-            echo $user
-            # install_pau_for_user "$user"
+            install_pau_for_user "$user"
         done
     ;;
 
@@ -260,7 +274,7 @@ install_ohmytmux() {
 }
 
 install_alacritty() {
-    echo "[.] Installing Alacritty..."
+    echo "[.] Installing Alacritty... (This can take a while)"
 
     git clone https://github.com/alacritty/alacritty /opt/alacritty &>/dev/null
     cd /opt/alacritty
