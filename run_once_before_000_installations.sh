@@ -9,41 +9,15 @@ fi
 #--------------------------------------------------------------------------------# USERS GLOBAL
 
 # Populate the array from the command output
-readarray -t arr1 < <(awk -F: '$3 >= 1000 && $7 != "/sbin/nologin" {print $1}' /etc/passwd)
-
-# Print the initial array
-echo "Original array: ${arr1[@]}"
+readarray -t temp_user_list < <(awk -F: '$3 >= 1000 && $7 != "/sbin/nologin" {print $1}' /etc/passwd)
 
 # Create a new array without the item "nobody"
-arr2=()
-for item in "${arr1[@]}"; do
-    if [[ "$item" != "nobody" ]]; then
-        arr2+=("$item")
-    fi
-done
-
-# Print the new array
-echo "New array without 'nobody': ${arr2[@]}"
-
-
-# Define the initial tmp_user_list
-tmp_user_list=$(awk -F: '$3 >= 1000 && $7 != "/sbin/nologin" {print $1}' /etc/passwd)
-
-# Print the initial tmp_user_list
-echo "Original tmp_user_list: ${tmp_user_list[@]}"
-
-# Create a new tmp_user_list without the item "nobody"
 USER_LIST=()
-for item in "${tmp_user_list[@]}"; do
+for item in "${temp_user_list[@]}"; do
     if [[ "$item" != "nobody" ]]; then
         USER_LIST+=("$item")
     fi
 done
-
-unset tmp_user_list
-
-# Print the new tmp_user_list
-echo "New array without 'nobody': ${USER_LIST[@]}"
 
 #--------------------------------------------------------------------------------# OTHER GLOBALS
 
