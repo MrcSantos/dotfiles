@@ -14,8 +14,7 @@ USER_LIST=$(awk -F: '$3 >= 1000 && $7 != "/sbin/nologin" {print $1}' /etc/passwd
 # Need to remove the "nobody" user from the $USER_LIST variable
 # This is a edge case i didn't think about in Arch Linux
 for i in "${!USER_LIST[@]}"; do
-    if [ ! "${USER_LIST[i]}" = "nobody" ]; then
-        echo "[.] Found non-root user ${USER_LIST[i]}"
+    if [[ "${USER_LIST[i]}" != "nobody" ]]; then
         new_array+=( "${USER_LIST[i]}" )
     fi
 done
@@ -30,7 +29,7 @@ OS=$ID
 
 # Other global variables declarations
 UPGRADE_COMMAND=""
-INSTALL_COMMAND=""
+INSTALL_COMMAND_PREFIX=""
 SYSTEM_DIR=""
 WORKSTATION_TYPE=""
 
@@ -40,7 +39,7 @@ sinstall() {
 # s(ilent)install
 # This function silently installs a package from global variables
 # Usage: install <packages> <optional flags>
-    eval "$INSTALL_COMMAND $2 $1 #&>/dev/null"
+    eval "$INSTALL_COMMAND_PREFIX $2 $1 #&>/dev/null"
 }
 
 is_os_known() {
@@ -51,7 +50,7 @@ is_os_known() {
         *[sS]olus*)
             OS="Solus OS"
             UPGRADE_COMMAND=""
-            INSTALL_COMMAND="eopkg install -y"
+            INSTALL_COMMAND_PREFIX="eopkg install -y"
             SYSTEM_DIR="/usr/bin"
             WORKSTATION_TYPE="desktop"
         ;;
@@ -59,7 +58,7 @@ is_os_known() {
         *[kK]ali*)
             OS="Kali Linux"
             UPGRADE_COMMAND="apt update && apt upgrade -y && apt dist-upgrade #&>/dev/null"
-            INSTALL_COMMAND="apt install -y"
+            INSTALL_COMMAND_PREFIX="apt install -y"
             SYSTEM_DIR="/usr/local/bin"
             WORKSTATION_TYPE="hacking workstation"
         ;;
@@ -67,15 +66,15 @@ is_os_known() {
         *[uU]buntu*)
             OS="Ubuntu"
             UPGRADE_COMMAND="apt update && apt upgrade -y && apt dist-upgrade #&>/dev/null"
-            INSTALL_COMMAND="apt install -y"
+            INSTALL_COMMAND_PREFIX="apt install -y"
             SYSTEM_DIR="/usr/local/bin"
             WORKSTATION_TYPE="desktop"
         ;;
 
         *[aA]rch*)
             OS="Arch Linux"
-            UPGRADE_COMMAND="echo `y` | pacman -Syu #&>/dev/null"
-            INSTALL_COMMAND="echo `y` | pacman -S --needed --noconfirm"
+            UPGRADE_COMMAND="pacman -Syu #&>/dev/null"
+            INSTALL_COMMAND_PREFIX="pacman -S --needed --noconfirm"
             SYSTEM_DIR="/usr/local/bin"
             WORKSTATION_TYPE="desktop"
         ;;
@@ -83,7 +82,7 @@ is_os_known() {
         *[vV]oid*)
             OS="Void Linux"
             UPGRADE_COMMAND=""
-            INSTALL_COMMAND="xbps-install"
+            INSTALL_COMMAND_PREFIX="xbps-install"
             SYSTEM_DIR="/usr/local/bin"
             WORKSTATION_TYPE="server"
         ;;
