@@ -71,7 +71,7 @@ is_os_known() {
 
         *[aA]rch*)
             OS="Arch Linux"
-            UPGRADE_COMMAND="pacman -Syu --noconfirm &>/dev/null"
+            UPGRADE_COMMAND="pacman -Syu --noconfirm #&>/dev/null"
             INSTALL_COMMAND_PREFIX="pacman -S --needed --noconfirm"
             SYSTEM_DIR="/usr/local/bin"
             WORKSTATION_TYPE="desktop"
@@ -103,7 +103,7 @@ if ! is_os_known ; then exit 1; fi
 
 #--------------------------------------------------------------------------------------------------# BANNER
 
-read -n 1 -s -r -p "[?] Press any key to continue"
+read -n 1 -s -r -p "[?] The installer is ready, press any key to continue"
 
 clear
 echo
@@ -147,7 +147,7 @@ case $OS in
         sinstall "wget unzip git tmux vim cargo nodejs fastfetch"
 
         # Install AUR helper PARU
-        echo "[.] Installing PARU..."
+        echo "[.] Installing PARU and Librewolf... (This can take a while)"
         git clone https://aur.archlinux.org/paru.git /opt/paru &>/dev/null
         cd /opt/paru
 
@@ -157,7 +157,7 @@ case $OS in
             chown $username /opt/paru
 
             # Install PARU and librewolf as browser (Only for arch because I love it, ok?)
-            su - $username -c "cd /opt/paru && makepkg -si && paru -Syu librewolf-bin"
+            su - $username -c "cd /opt/paru && makepkg -si &>/dev/null && paru -Syu librewolf-bin &>/dev/null"
         }
 
         # Not available for root user
