@@ -8,18 +8,24 @@ fi
 
 #--------------------------------------------------------------------------------# USERS GLOBAL
 
-# Get non-root users
-USER_LIST=$(awk -F: '$3 >= 1000 && $7 != "/sbin/nologin" {print $1}' /etc/passwd)
+# Define the initial tmp_user_list
+tmp_user_list=$(awk -F: '$3 >= 1000 && $7 != "/sbin/nologin" {print $1}' /etc/passwd)
 
-# Need to remove the "nobody" user from the $USER_LIST variable
-# This is a edge case i didn't think about in Arch Linux
-for i in "${!USER_LIST[@]}"; do
-    if [[ "${USER_LIST[i]}" != "nobody" ]]; then
-        new_array+=( "${USER_LIST[i]}" )
+# Print the initial tmp_user_list
+echo "Original tmp_user_list: ${tmp_user_list[@]}"
+
+# Create a new tmp_user_list without the item "nobody"
+USER_LIST=()
+for item in "${tmp_user_list[@]}"; do
+    if [[ "$item" != "nobody" ]]; then
+        USER_LIST+=("$item")
     fi
 done
-USER_LIST=("${new_array[@]}")
-unset new_array
+
+unset tmp_user_list
+
+# Print the new tmp_user_list
+echo "New array without 'nobody': ${USER_LIST[@]}"
 
 #--------------------------------------------------------------------------------# OTHER GLOBALS
 
@@ -73,7 +79,7 @@ is_os_known() {
 
         *[aA]rch*)
             OS="Arch Linux"
-            UPGRADE_COMMAND="pacman -Syu #&>/dev/null"
+            UPGRADE_COMMAND="pacman -Syu --noconfirm #&>/dev/null"
             INSTALL_COMMAND_PREFIX="pacman -S --needed --noconfirm"
             SYSTEM_DIR="/usr/local/bin"
             WORKSTATION_TYPE="desktop"
