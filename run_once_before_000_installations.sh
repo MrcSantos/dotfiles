@@ -151,15 +151,18 @@ case $OS in
         git clone https://aur.archlinux.org/paru.git /opt/paru &>/dev/null
         cd /opt/paru
 
-        install_pau_for_user() {
+        install_paru_for_user() {
             local username=$1
 
-            su - $username -c "cd /opt/paru makepkg -si && paru -Syu librewolf-bin"
+            chown $username /opt/paru
+
+            # Install PARU and librewolf as browser (Only for arch because I love it, ok?)
+            su - $username -c "cd /opt/paru && makepkg -si && paru -Syu librewolf-bin"
         }
 
         # Not available for root user
         for user in $USER_LIST; do
-            install_pau_for_user "$user"
+            install_paru_for_user "$user"
         done
     ;;
 
@@ -212,7 +215,7 @@ install_zsh() {
 
         [ "$username" = "root" ] && user_folder="/root" || user_folder="/home/$username"
 
-        echo 'y' | su - $username -c "$(curl -fsSL https://raw.github.com/robbyrussell/oh-my-zsh/master/tools/install.sh)" &>/dev/null
+        echo 'y' | su - $username -c "$(curl -fsSL https://raw.github.com/robbyrussell/oh-my-zsh/master/tools/install.sh &>/dev/null)" &>/dev/null
         git clone --depth=1 https://github.com/romkatv/powerlevel10k.git $user_folder/.oh-my-zsh/custom/themes/powerlevel10k &>/dev/null
         git clone https://github.com/zsh-users/zsh-autosuggestions.git $user_folder/.oh-my-zsh/custom/plugins/zsh-autosuggestions &>/dev/null
         git clone https://github.com/zsh-users/zsh-syntax-highlighting.git $user_folder/.oh-my-zsh/custom/plugins/zsh-syntax-highlighting &>/dev/null
