@@ -139,15 +139,15 @@ echo "[.] Installing basic tools... (This can take a while)"
 case $OS in
     "Solus OS")
         sinstall "system.devel" "-c"
-        sinstall "git git-flow tmux vim cargo screenfetch"
+        sinstall "git git-flow tmux vim cargo fastfetch"
     ;;
 
     "Kali Linux" | Ubuntu)
-        sinstall "wget unzip git tmux vim cargo screenfetch"
+        sinstall "wget unzip git tmux vim cargo fastfetch"
     ;;
 
     "Arch Linux")
-        sinstall "wget unzip git tmux vim cargo screenfetch"
+        sinstall "wget unzip git tmux vim cargo fastfetch"
 
         # Install AUR helper PARU
         echo "[.] Installing PARU..."
@@ -167,7 +167,7 @@ case $OS in
     ;;
 
     "Void Linux")
-        sinstall "git wget gcc tmux vim cargo unzip screenfetch"
+        sinstall "git wget gcc tmux vim cargo unzip fastfetch"
     ;;
 esac
 
@@ -242,7 +242,7 @@ install_nvchad() {
 
         [ "$username" = "root" ] && user_folder="/root" || user_folder="/home/$username"
 
-        su - $username -c "git clone https://github.com/NvChad/NvChad $user_folder/.config/nvim --depth 1" #&>/dev/null
+        su - $username -c "git clone https://github.com/NvChad/starter $user_folder/.config/nvim --depth 1" #&>/dev/null
     }
 
     install_nvchad_for_user "root"
@@ -284,6 +284,18 @@ install_alacritty() {
     cd /opt/alacritty
     echo "opt-level = 1" >> Cargo.toml
     cargo build --release #&>/dev/null
+    cp /opt/alacritty/target/release/alacritty $SYSTEM_DIR/alacritty
+    cp /opt/alacritty/extra/logo/compat/alacritty-term+scanlines.png /usr/share/applications/alacritty.png
+
+    echo '
+[Desktop Entry]
+Type=Application
+Name=Alacritty
+Comment=A fast, cross-platform, OpenGL terminal emulator
+Icon=/usr/share/applications/alacritty.png
+Exec=/usr/local/bin/alacritty
+Categories=System Tools;
+' > /usr/share/applications/alacritty.desktop
 
     install_alacritty_for_user() {
         local username=$1
@@ -357,17 +369,22 @@ case $WORKSTATION_TYPE in
     ;;
 esac
 
+echo
+echo "[.] Installation complete!"
+echo
+read -n 1 -s -r -p "[?] Press any key to continue..."
+
 #--------------------------------------------------------------------------------------------------# LAST STEPS
 
+clear
 echo
-echo "[!] Remember:"
-echo " -  You must reboot the host if you want to see the changes"
-echo " -  Change console font to JetBrains MONO"
+echo "[.] Remember:"
+echo " -  You MUST reboot the host if you want to see the changes"
+echo " -  Change console font to JetBrains MONO if not using Alacritty"
 echo " -  Personalize you distro with themes and wallpaper"
 echo " -  Change keybindings to open the right terminal"
+echo " -  Execute :MasonInstallAll in neovim after lazy installs all plugins"
+echo " -  Always love yourself and others"
 echo
 
-read -n 1 -s -r -p "[?] Press any key to continue"
-
-clear
-screenfetch
+fastfetch
