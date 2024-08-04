@@ -6,33 +6,32 @@ if [[ $EUID -ne 0 ]]; then
     exit 1
 fi
 
-# Get OS
-. /etc/os-release
-OS=$ID
+#--------------------------------------------------------------------------------# USERS GLOBAL
 
 # Get non-root users
 USER_LIST=$(awk -F: '$3 >= 1000 && $7 != "/sbin/nologin" {print $1}' /etc/passwd)
 
-remove_nobody() {
-    # This function removes the "nobody" user from the $USER_LIST variable
-    # This is a edge case i didn't think about in Arch Linux
-    local new_array=()
-    for username in "${USER_LIST[@]}"; do
-        if [[ "$username" != "nobody" ]]; then
-            new_array+=("$username")
-        fi
-    done
-    USER_LIST=("${new_array[@]}")
-}
+# Need to remove the "nobody" user from the $USER_LIST variable
+# This is a edge case i didn't think about in Arch Linux
+for i in "${!USER_LIST[@]}"; do
+    new_array+=( "${USER_LIST[i]}" )
+done
+USER_LIST=("${new_array[@]}")
+unset new_array
 
-# We immediatly call the above function
-remove_nobody
+#--------------------------------------------------------------------------------# OTHER GLOBALS
+
+# Get OS
+. /etc/os-release
+OS=$ID
 
 # Other global variables declarations
 UPGRADE_COMMAND=""
 INSTALL_COMMAND=""
 SYSTEM_DIR=""
 WORKSTATION_TYPE=""
+
+#--------------------------------------------------------------------------------# OS MANIPULATION
 
 sinstall() {
 # s(ilent)install
@@ -102,7 +101,7 @@ is_os_known() {
 # GUARD CLAUSE: If I don't recognize or know the OS i must exit
 if ! is_os_known ; then exit 1; fi
 
-#--------------------------------------------------------------------------------------------------#
+#--------------------------------------------------------------------------------------------------# BANNER
 
 clear
 echo
@@ -118,7 +117,7 @@ echo
 echo
 echo
 
-#--------------------------------------------------------------------------------------------------#
+#--------------------------------------------------------------------------------------------------# INIT OF OS TOOLS
 
 # Asks the user to update the system
 read -n 1 -p "[?] Do you want to update the system? [y/N] " choice
@@ -169,7 +168,7 @@ esac
 
 echo # Extra spacing
 
-######################################################### FUNCTIONS
+#--------------------------------------------------------------------------------------------------# FUNCTIONS
 
 install_nerdFonts() {
     echo "[.] Installing Nerd Fonts..."
@@ -309,7 +308,7 @@ bold_italic = { family = "JetBrainsMono Nerd Font", style = "Bold Italic" }
 #    echo alias ssh="ssh -t -- /bin/sh -c 'tmux has-session && exec tmux attach || exec tmux' >> .zshrc
 #}
 
-######################################## END OF FUNCTIONS
+#--------------------------------------------------------------------------------------------------# END OF FUNCTIONS
 
 case $WORKSTATION_TYPE in
     "programming")
@@ -352,6 +351,8 @@ case $WORKSTATION_TYPE in
         #create_aliases
     ;;
 esac
+
+#--------------------------------------------------------------------------------------------------# LAST STEPS
 
 echo
 echo "[!] Remember:"
