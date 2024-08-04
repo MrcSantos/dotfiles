@@ -14,7 +14,10 @@ USER_LIST=$(awk -F: '$3 >= 1000 && $7 != "/sbin/nologin" {print $1}' /etc/passwd
 # Need to remove the "nobody" user from the $USER_LIST variable
 # This is a edge case i didn't think about in Arch Linux
 for i in "${!USER_LIST[@]}"; do
-    new_array+=( "${USER_LIST[i]}" )
+    if [ ! "${USER_LIST[i]}" = "nobody" ]; then
+        echo "[.] Found non-root user ${USER_LIST[i]}"
+        new_array+=( "${USER_LIST[i]}" )
+    fi
 done
 USER_LIST=("${new_array[@]}")
 unset new_array
@@ -102,6 +105,8 @@ is_os_known() {
 if ! is_os_known ; then exit 1; fi
 
 #--------------------------------------------------------------------------------------------------# BANNER
+
+read -n 1 -s -r -p "[?] Press any key to continue"
 
 clear
 echo
