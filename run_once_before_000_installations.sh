@@ -106,14 +106,45 @@ if ! is_os_known ; then exit 1; fi
 read -n 1 -s -r -p "[?] The installer is ready, press any key to continue"
 
 clear
+echo "\033[1;31m"
+echo "               ⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⡀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀"
+echo "               ⠀⠀⠀⠀⠀⠀⠀⠀⠀⢠⣾⡄⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀"
+echo "               ⠀⠀⠀⠀⠀⠀⠀⠀⢀⣼⣿⣧⣶⣶⣶⣦⣤⣀⡀⠀⠀⠀⠀⠀⠀⠀⠀⠀"
+echo "               ⠀⠀⠀⠀⠀⠀⣠⣾⢿⣿⣿⣿⣏⠉⠉⠛⠛⠿⣷⣕⠀⠀⠀⠀⠀⠀⢀⡀"
+echo "               ⠀⠀⠀⠀⣠⣾⢝⠄⢀⣿⡿⠻⣿⣄⠀⠀⠀⠀⠈⢿⣧⡀⣀⣤⡾⠀⠀ "
+echo "               ⠀⠀⠀⢰⣿⡡⠁⠀⠀⣿⡇⠀⠸⣿⣾⡆⠀⠀⣀⣤⣿⣿⠋⠁⠀⠀⠀⠀"
+echo "               ⠀⠀⢀⣷⣿⠃⠀⠀⢸⣿⡇⠀⠀⠹⣿⣷⣴⡾⠟⠉⠸⣿⡇⠀⠀⠀⠀⠀"
+echo "               ⠀⠀⢸⣿⠗⡀⠀⠀⢸⣿⠃⣠⣶⣿⠿⢿⣿⡀⠀⠀⢀⣿⡇⠀⠀⠀⠀⠀"
+echo "               ⠀⠀⠘⡿⡄⣇⠀⣀⣾⣿⡿⠟⠋⠁⠀⠈⢻⣷⣆⡄⢸⣿⡇⠀⠀⠀⠀⠀"
+echo "               ⠀⠀⠀⢻⣷⣿⣿⠿⣿⣧⠀⠀⠀⠀⠀⠀⠀⠻⣿⣷⣿⡟⠀⠀⠀⠀⠀⠀"
+echo "               ⢀⣰⣾⣿⠿⣿⣿⣾⣿⠇⠀⠀⠀⠀⠀⠀⠀⢀⣼⣿⣿⣅⠀⠀⠀⠀⠀⠀"
+echo "               ⠀⠰⠊⠁⠀⠙⠪⣿⣿⣶⣤⣄⣀⣀⣀⣤⣶⣿⠟⠋⠙⢿⣷⡄⠀⠀⠀⠀"
+echo "               ⠀⠀⠀⠀⠀⠀⢀⣿⡟⠺⠭⠭⠿⠿⠿⠟⠋⠁⠀⠀⠀⠀⠙⠏⣦⠀⠀⠀"
+echo "               ⠀⠀⠀⠀⠀⠀⢸⡟⠃⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀"
+echo "               ⠀⠀⠀⠀⠀⠀⠀⠁⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀"
+echo "\033[0m"
+echo "                ██████╗   ██████╗   ██████╗  ██████╗                   "
+echo "               ██╔════╝  ██╔═══██╗ ██╔═══██╗ ██╔══██╗                  "
+echo "               ██║  ███╗ ██║   ██║ ██║   ██║ ██║  ██║                  "
+echo "               ██║   ██║ ██║   ██║ ██║   ██║ ██║  ██║                  "
+echo "               ╚██████╔╝ ╚██████╔╝ ╚██████╔╝ ██████╔╝                  "
+echo "                ╚═════╝   ╚═════╝   ╚═════╝  ╚═════╝                   "
 echo
-echo "██╗    ██╗ ███████╗ ██╗       ██████╗  ██████╗  ███╗   ███╗ ███████╗    ███████╗ ██╗ ██████╗ "
-echo "██║    ██║ ██╔════╝ ██║      ██╔════╝ ██╔═══██╗ ████╗ ████║ ██╔════╝    ██╔════╝ ██║ ██╔══██╗"
-echo "██║ █╗ ██║ █████╗   ██║      ██║      ██║   ██║ ██╔████╔██║ █████╗      ███████╗ ██║ ██████╔╝"
-echo "██║███╗██║ ██╔══╝   ██║      ██║      ██║   ██║ ██║╚██╔╝██║ ██╔══╝      ╚════██║ ██║ ██╔══██╗"
-echo "╚███╔███╔╝ ███████╗ ███████╗ ╚██████╗ ╚██████╔╝ ██║ ╚═╝ ██║ ███████╗    ███████║ ██║ ██║  ██║"
-echo " ╚══╝╚══╝  ╚══════╝ ╚══════╝  ╚═════╝  ╚═════╝  ╚═╝     ╚═╝ ╚══════╝    ╚══════╝ ╚═╝ ╚═╝  ╚═╝"
+echo "   ███╗   ███╗  ██████╗  ██████╗  ███╗   ██╗ ██╗ ███╗   ██╗  ██████╗   "
+echo "   ████╗ ████║ ██╔═══██╗ ██╔══██╗ ████╗  ██║ ██║ ████╗  ██║ ██╔════╝   "
+echo "   ██╔████╔██║ ██║   ██║ ██████╔╝ ██╔██╗ ██║ ██║ ██╔██╗ ██║ ██║  ███╗  "
+echo "   ██║╚██╔╝██║ ██║   ██║ ██╔══██╗ ██║╚██╗██║ ██║ ██║╚██╗██║ ██║   ██║  "
+echo "   ██║ ╚═╝ ██║ ╚██████╔╝ ██║  ██║ ██║ ╚████║ ██║ ██║ ╚████║ ╚██████╔╝  "
+echo "   ╚═╝     ╚═╝  ╚═════╝  ╚═╝  ╚═╝ ╚═╝  ╚═══╝ ╚═╝ ╚═╝  ╚═══╝  ╚═════╝   "
 echo
+echo "                         ███████╗ ██╗ ██████╗                          "
+echo "                         ██╔════╝ ██║ ██╔══██╗                         "
+echo "                         ███████╗ ██║ ██████╔╝                         "
+echo "                         ╚════██║ ██║ ██╔══██╗                         "
+echo "                         ███████║ ██║ ██║  ██║                         "
+echo "                         ╚══════╝ ╚═╝ ╚═╝  ╚═╝                         "
+echo
+echo "Automated anarchy"
 echo "Powered by: $OS"
 echo
 echo
@@ -132,6 +163,7 @@ case $choice in
 esac
 
 echo "[.] Installing basic tools... (This can take a while)"
+echo
 
 case $OS in
     "Solus OS")
@@ -170,8 +202,6 @@ case $OS in
         sinstall "git wget gcc tmux vim cargo unzip fastfetch"
     ;;
 esac
-
-echo # Extra spacing
 
 #--------------------------------------------------------------------------------------------------# FUNCTIONS
 
@@ -215,7 +245,7 @@ install_zsh() {
 
         [ "$username" = "root" ] && user_folder="/root" || user_folder="/home/$username"
 
-        echo 'y' | su - $username -c "$(curl -fsSL https://raw.github.com/robbyrussell/oh-my-zsh/master/tools/install.sh &>/dev/null)" &>/dev/null
+        echo 'y' | su - $username -c "$(curl -fsSL https://raw.github.com/robbyrussell/oh-my-zsh/master/tools/install.sh)" &>/dev/null
         git clone --depth=1 https://github.com/romkatv/powerlevel10k.git $user_folder/.oh-my-zsh/custom/themes/powerlevel10k &>/dev/null
         git clone https://github.com/zsh-users/zsh-autosuggestions.git $user_folder/.oh-my-zsh/custom/plugins/zsh-autosuggestions &>/dev/null
         git clone https://github.com/zsh-users/zsh-syntax-highlighting.git $user_folder/.oh-my-zsh/custom/plugins/zsh-syntax-highlighting &>/dev/null
