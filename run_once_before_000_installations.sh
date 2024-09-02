@@ -188,10 +188,7 @@ case $OS in
             chown $username /opt/paru
 
             # Install PARU and librewolf as browser (Only for arch because I love it, ok?)
-            su - $username 
-            cd /opt/paru 
-            makepkg -si &>/dev/null
-            yes '' | paru -Syu librewolf-bin &>/dev/null
+            su - $username -c "cd /opt/paru && makepkg -si"
         }
 
         # Not available for root user
@@ -315,7 +312,7 @@ install_alacritty() {
     git clone https://github.com/alacritty/alacritty /opt/alacritty &>/dev/null
     cd /opt/alacritty
     echo "opt-level = 1" >> Cargo.toml
-    cargo build --release --quiet
+    cargo build --release #--quiet
     cp /opt/alacritty/target/release/alacritty $SYSTEM_DIR/alacritty
     cp /opt/alacritty/extra/logo/compat/alacritty-term+scanlines.png /usr/share/applications/alacritty.png
 
@@ -416,6 +413,7 @@ echo " -  Change console font to JetBrains MONO if not using Alacritty"
 echo " -  Personalize you distro with themes and wallpaper"
 echo " -  Change keybindings to open the right terminal"
 echo " -  Execute :MasonInstallAll in neovim after lazy installs all plugins"
+echo " -  Use the command 'paru -Syu librewolf-bin' to install librewolf browser on users of choice"
 echo " -  Always love yourself and others"
 echo
 
