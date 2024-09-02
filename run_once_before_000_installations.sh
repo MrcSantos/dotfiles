@@ -326,7 +326,7 @@ Name=Alacritty
 Comment=A fast, cross-platform, OpenGL terminal emulator
 Icon=/usr/share/applications/alacritty.png
 Exec=/usr/local/bin/alacritty
-Categories=System Tools;
+Categories=Other;
 ' > /usr/share/applications/alacritty.desktop
 
     install_alacritty_for_user() {
