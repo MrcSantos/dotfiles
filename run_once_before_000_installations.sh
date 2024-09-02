@@ -188,7 +188,10 @@ case $OS in
             chown $username /opt/paru
 
             # Install PARU and librewolf as browser (Only for arch because I love it, ok?)
-            su - $username -c "cd /opt/paru && makepkg -si &>/dev/null && paru -Syu librewolf-bin &>/dev/null"
+            su - $username 
+            cd /opt/paru 
+            makepkg -si &>/dev/null
+            yes '' | paru -Syu librewolf-bin &>/dev/null
         }
 
         # Not available for root user
