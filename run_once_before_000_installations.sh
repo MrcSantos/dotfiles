@@ -175,7 +175,7 @@ case $OS in
     ;;
 
     "Arch Linux")
-        sinstall "wget unzip git tmux vim rust nodejs npm fastfetch flatpack"
+        sinstall "wget unzip git tmux vim rust nodejs npm fastfetch flatpak"
 
         # Install AUR helper PARU
         echo "[.] Installing PARU and Librewolf... (This can take a while)"
