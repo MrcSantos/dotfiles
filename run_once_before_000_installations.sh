@@ -68,6 +68,14 @@ is_os_known() {
             SYSTEM_DIR="/usr/local/bin"
             WORKSTATION_TYPE="desktop"
         ;;
+        
+        *[dD]ebian*)
+            OS="Debian"
+            UPGRADE_COMMAND="apt update && apt upgrade -y && apt dist-upgrade"
+            INSTALL_COMMAND_PREFIX="apt install -y"
+            SYSTEM_DIR="/usr/local/bin"
+            WORKSTATION_TYPE="desktop"
+        ;;
 
         *[aA]rch*)
             OS="Arch Linux"
@@ -170,7 +178,7 @@ case $OS in
         sinstall "git git-flow tmux vim cargo fastfetch"
     ;;
 
-    "Kali Linux" | Ubuntu)
+    "Kali Linux" | Debian | Ubuntu)
         sinstall "wget unzip git tmux vim cargo fastfetch"
     ;;
 
@@ -363,8 +371,6 @@ case $WORKSTATION_TYPE in
         install_zsh
         install_nvchad
         install_ohmytmux
-        install_alacritty
-        #create_aliases
     ;;
 
     "desktop")
@@ -373,8 +379,6 @@ case $WORKSTATION_TYPE in
         install_zsh
         install_nvchad
         install_ohmytmux
-        install_alacritty
-        #create_aliases
     ;;
 
     "server")
@@ -383,8 +387,6 @@ case $WORKSTATION_TYPE in
         install_zsh
         install_nvchad
         install_ohmytmux
-        install_alacritty
-        #create_aliases
     ;;
 
     "hacking")
@@ -393,8 +395,7 @@ case $WORKSTATION_TYPE in
         install_zsh
         install_nvchad
         install_ohmytmux
-        install_alacritty
-        #create_aliases
+
     ;;
 esac
 
