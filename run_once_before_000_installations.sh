@@ -272,7 +272,11 @@ install_zsh() {
 install_nvchad() {
     echo "[.] Installing Nvim with NVChad..."
 
-    sinstall "ripgrep neovim"
+    sinstall "ripgrep"
+    
+    curl -LO https://github.com/neovim/neovim/releases/latest/download/nvim-linux-x86_64.tar.gz
+    rm -rf /opt/nvim-linux-x86_64
+    tar -C /opt -xzf nvim-linux-x86_64.tar.gz
 
     install_nvchad_for_user() {
         local username=$1
@@ -280,6 +284,7 @@ install_nvchad() {
         [ "$username" = "root" ] && user_folder="/root" || user_folder="/home/$username"
 
         su - $username -c "git clone https://github.com/NvChad/starter $user_folder/.config/nvim --depth 1"
+        echo 'export PATH="$PATH:/opt/nvim-linux-x86_64/bin"' >> .zshrc
     }
 
     install_nvchad_for_user "root"
