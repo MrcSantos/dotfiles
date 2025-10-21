@@ -259,8 +259,8 @@ install_zsh() {
 
         sed -i 's/ZSH_THEME="[^"]*"/ZSH_THEME="powerlevel10k\/powerlevel10k"/g' $user_folder/.zshrc
         sed -i 's/plugins=(git)/plugins=(git zsh-autosuggestions zsh-syntax-highlighting)/' $user_folder/.zshrc
-        echo "EDITOR=nvim" >> .zshrc
-        echo 'alias v="nvim"' >> .zshrc
+        echo "EDITOR=nvim" >> $user_folder/.zshrc
+        echo 'alias v="nvim"' >> $user_folder/.zshrc
     }
 
     set_zsh_with_plugins_for_user "root"
@@ -284,7 +284,7 @@ install_nvchad() {
         [ "$username" = "root" ] && user_folder="/root" || user_folder="/home/$username"
 
         su - $username -c "git clone https://github.com/NvChad/starter $user_folder/.config/nvim --depth 1"
-        echo 'export PATH="$PATH:/opt/nvim-linux-x86_64/bin"' >> .zshrc
+        echo 'export PATH="$PATH:/opt/nvim-linux-x86_64/bin"' >> $user_folder/.zshrc
     }
 
     install_nvchad_for_user "root"
@@ -304,7 +304,6 @@ install_ohmytmux() {
         # If user is root then the user folder is /root, else the user folder is his home
         [ "$username" = "root" ] && user_folder="/root" || user_folder="/home/$username"
 
-        echo 'TERM="xterm-256color"' >> $user_folder/.bashrc
         echo 'TERM="xterm-256color"' >> $user_folder/.zshrc
 
         mkdir -p $user_folder/.config/tmux
