@@ -175,15 +175,15 @@ echo "[.] Installing basic tools... (This can take a while)"
 case $OS in
     "Solus OS")
         sinstall "system.devel" "-c"
-        sinstall "git git-flow tmux vim cargo fastfetch"
+        sinstall "git git-flow tmux vim cargo"
     ;;
 
     "Kali Linux" | Debian | Ubuntu)
-        sinstall "wget unzip git tmux vim cargo fastfetch"
+        sinstall "wget unzip git tmux vim cargo"
     ;;
 
     "Arch Linux")
-        sinstall "wget unzip git tmux vim rust nodejs npm fastfetch flatpak"
+        sinstall "wget unzip git tmux vim rust nodejs npm flatpak"
 
         # Install AUR helper PARU
         echo "[.] Installing PARU and Librewolf... (This can take a while)"
@@ -206,7 +206,7 @@ case $OS in
     ;;
 
     "Void Linux")
-        sinstall "git wget gcc tmux vim cargo unzip fastfetch"
+        sinstall "git wget gcc tmux vim cargo unzip"
     ;;
 esac
 
@@ -417,5 +417,3 @@ echo " -  Execute :MasonInstallAll in neovim after lazy installs all plugins"
 echo " -  Use the command 'paru -Syu librewolf-bin' to install librewolf browser on users of choice"
 echo " -  Always love yourself and others"
 echo
-
-fastfetch
