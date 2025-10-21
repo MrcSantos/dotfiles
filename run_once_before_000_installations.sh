@@ -155,8 +155,6 @@ echo
 echo "Automated anarchy"
 echo "Powered by: $OS"
 echo
-echo
-echo
 
 #--------------------------------------------------------------------------------------------------# INIT OF OS TOOLS
 
