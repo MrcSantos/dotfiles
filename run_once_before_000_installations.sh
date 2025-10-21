@@ -314,54 +314,6 @@ install_ohmytmux() {
     done
 }
 
-install_alacritty() {
-    echo "[.] Installing Alacritty... (This can take a while)"
-
-    git clone https://github.com/alacritty/alacritty /opt/alacritty
-    cd /opt/alacritty
-    echo "opt-level = 1" >> Cargo.toml
-    cargo build --release #--quiet
-    cp /opt/alacritty/target/release/alacritty $SYSTEM_DIR/alacritty
-    cp /opt/alacritty/extra/logo/compat/alacritty-term+scanlines.png /usr/share/applications/alacritty.png
-
-    echo '
-[Desktop Entry]
-Type=Application
-Name=Alacritty
-Comment=A fast, cross-platform, OpenGL terminal emulator
-Icon=/usr/share/applications/alacritty.png
-Exec=/usr/local/bin/alacritty
-Categories=Other;
-' > /usr/share/applications/alacritty.desktop
-
-    install_alacritty_for_user() {
-        local username=$1
-
-        # If user is root then the user folder is /root, else the user folder is his home
-        [ "$username" = "root" ] && user_folder="/root" || user_folder="/home/$username"
-
-        mkdir -p $user_folder/.config/alacritty
-
-            echo '
-[font]
-normal = { family = "JetBrainsMono Nerd Font", style = "Regular" }
-bold = { family = "JetBrainsMono Nerd Font", style = "Bold" }
-italic = { family = "JetBrainsMono Nerd Font", style = "Italic" }
-bold_italic = { family = "JetBrainsMono Nerd Font", style = "Bold Italic" }
-' > $user_folder/.config/alacritty/alacritty.toml
-    }
-
-    install_alacritty_for_user "root"
-    for user in $USER_LIST; do
-        install_alacritty_for_user "$user"
-    done
-}
-
-#create_aliases() {
-#    # TODO
-#    echo alias ssh="ssh -t -- /bin/sh -c 'tmux has-session && exec tmux attach || exec tmux' >> .zshrc
-#}
-
 #--------------------------------------------------------------------------------------------------# END OF FUNCTIONS
 
 case $WORKSTATION_TYPE in
