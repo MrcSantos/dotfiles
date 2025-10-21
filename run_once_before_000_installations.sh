@@ -179,7 +179,7 @@ case $OS in
     ;;
 
     "Kali Linux" | Debian | Ubuntu)
-        sinstall "curl wget unzip git git-flow tmux vim cargo"
+        sinstall "build-essential curl wget unzip git git-flow tmux vim cargo"
     ;;
 
     "Arch Linux")
