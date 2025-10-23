@@ -313,6 +313,13 @@ install_ohmytmux() {
     install_ohmytmux_for_user "root"
     for user in $USER_LIST; do
         install_ohmytmux_for_user "$user"
+        chown -R "$user":"$user" "/home/$user/.config"
+    done
+}
+
+setup_permissions() {
+    for user in $USER_LIST; do
+        chown -R "$user":"$user" "/home/$user/"
     done
 }
 
@@ -349,9 +356,10 @@ case $WORKSTATION_TYPE in
         install_zsh
         install_nvchad
         install_ohmytmux
-
     ;;
 esac
+
+setup_permissions
 
 echo
 echo "[.] Installation complete!"
