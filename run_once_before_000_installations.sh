@@ -25,6 +25,11 @@ done
 . /etc/os-release
 OS=$ID
 IS_WSL=$(uname -r | grep -qi WSL2)
+IS_WSL_TEXT=""
+
+if [[ $IS_WSL == 0 ]]; then
+    IS_WSL_TEXT=" (WSL version)"
+fi
 
 # Other global variables declarations
 UPGRADE_COMMAND=""
@@ -154,7 +159,7 @@ echo "                         ███████║ ██║ ██║  █
 echo "                         ╚══════╝ ╚═╝ ╚═╝  ╚═╝                         "
 echo
 echo "Automated anarchy"
-echo "Powered by: $OS"
+echo "Powered by: $OS$IS_WSL_TEXT"
 echo
 
 #--------------------------------------------------------------------------------------------------# INIT OF OS TOOLS
