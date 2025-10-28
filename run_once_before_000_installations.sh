@@ -1,4 +1,4 @@
-#!/bin/bash
+2#!/bin/bash
 
 # Super user check
 if [[ $EUID -ne 0 ]]; then
