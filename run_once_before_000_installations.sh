@@ -24,6 +24,7 @@ done
 # Get OS
 . /etc/os-release
 OS=$ID
+IS_WSL=$(uname -r | grep -qi WSL2)
 
 # Other global variables declarations
 UPGRADE_COMMAND=""
