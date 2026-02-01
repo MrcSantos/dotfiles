@@ -326,6 +326,21 @@ install_ohmytmux() {
 install_kitty() {
     echo "[.] Installing Kitty terminal..."
     sinstall "kitty"
+    
+    install_kitty_for_user() {
+        local username=$1
+
+        # If user is root then the user folder is /root, else the user folder is his home
+        [ "$username" = "root" ] && user_folder="/root" || user_folder="/home/$username"
+
+        echo 'alias icat="kitten icat"' >> $user_folder/.zshrc
+    }
+
+    install_kitty_for_user "root"
+    for user in $USER_LIST; do
+        install_ohmytmux_for_user "$user"
+        chown -R "$user":"$user" "/home/$user/.config"
+    done
 }
 
 setup_permissions() {
