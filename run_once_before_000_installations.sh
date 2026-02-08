@@ -343,6 +343,10 @@ install_kitty() {
     done
 }
 
+install_lsd () {
+    sinstall "lsd"
+}
+
 setup_permissions() {
     for user in $USER_LIST; do
         chown -R "$user":"$user" "/home/$user/"
@@ -359,6 +363,7 @@ case $WORKSTATION_TYPE in
         install_nvchad
         install_ohmytmux
         install_kitty
+        install_lsd
     ;;
 
     "desktop")
@@ -368,6 +373,7 @@ case $WORKSTATION_TYPE in
         install_nvchad
         install_ohmytmux
         install_kitty
+        install_lsd
     ;;
 
     "server")
@@ -377,6 +383,7 @@ case $WORKSTATION_TYPE in
         install_nvchad
         install_ohmytmux
         install_kitty
+        install_lsd
     ;;
 
     "hacking")
@@ -386,6 +393,7 @@ case $WORKSTATION_TYPE in
         install_nvchad
         install_ohmytmux
         install_kitty
+        install_lsd
     ;;
 esac
 
