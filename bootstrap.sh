@@ -6,8 +6,6 @@ if [[ $EUID -ne 0 ]]; then
     exit 1
 fi
 
-cd "$(dirname "$0")"
-
 #--------------------------------------------------------------------------------# USERS GLOBAL
 
 # Populate the array from the command output
@@ -151,6 +149,55 @@ esac
 
 #--------------------------------------------------------------------------------------------------# FUNCTIONS
 
+setup_permissions() {
+    for user in $USER_LIST; do
+        chown -R "$user":"$user" "/home/$user/"
+        chown -h -R "$user":"$user" "/home/$user/"
+    done
+}
+
+copy_dots_folder_to_users() {
+    copy_dots_folder_to_user() {
+        local username=$1
+
+        [ "$username" = "root" ] && user_folder="/root" || user_folder="/home/$username"
+
+        cd "$(dirname "$0")"
+        cp -R dots $user_folder
+        setup_permissions
+    }
+
+    copy_dots_folder_to_user "root"
+    for user in $USER_LIST; do
+        copy_dots_folder_to_user "$user"
+    done
+}
+
+deploy_dotfiles_with_stow() {
+    local dotfile_name=$1
+
+    deploy_dotfiles_with_stow_for_user() {
+        local username=$1
+        local dotfile_name=$2
+
+        [ "$username" = "root" ] && user_folder="/root" || user_folder="/home/$username"
+
+        cd $user_folder/dots 
+        stow --adopt -t $user_folder $dotfile_name
+        setup_permissions
+    }
+    
+    deploy_dotfiles_with_stow_for_user "root" $dotfile_name
+    for user in $USER_LIST; do
+        deploy_dotfiles_with_stow_for_user "$user" $dotfile_name
+    done
+}
+
+git_reset() {
+    cd "$(dirname "$0")"
+    git reset .
+}
+
 install_nerdFonts() {
     echo "[.] Installing Nerd Fonts..."
 
@@ -195,14 +242,14 @@ install_zsh() {
         git clone --depth=1 https://github.com/romkatv/powerlevel10k.git $user_folder/.oh-my-zsh/custom/themes/powerlevel10k
         git clone https://github.com/zsh-users/zsh-autosuggestions.git $user_folder/.oh-my-zsh/custom/plugins/zsh-autosuggestions
         git clone https://github.com/zsh-users/zsh-syntax-highlighting.git $user_folder/.oh-my-zsh/custom/plugins/zsh-syntax-highlighting
-
-        stow -t $user_folder ./dots/zsh
     }
 
     set_zsh_with_plugins_for_user "root"
     for user in $USER_LIST; do
         set_zsh_with_plugins_for_user "$user"
     done
+
+    deploy_dotfiles_with_stow "zsh"
 }
 
 install_nvchad() {
@@ -231,6 +278,8 @@ install_nvchad() {
 install_kitty() {
     echo "[.] Installing Kitty terminal..."
     sinstall "kitty"
+
+    deploy_dotfiles_with_stow "kitty"
 }
 
 install_lsd () {
@@ -238,13 +287,9 @@ install_lsd () {
     sinstall "lsd"
 }
 
-setup_permissions() {
-    for user in $USER_LIST; do
-        chown -R "$user":"$user" "/home/$user/"
-    done
-}
-
 #--------------------------------------------------------------------------------------------------# END OF FUNCTIONS
+
+copy_dots_folder_to_users
 
 install_nerdFonts
 install_nnn
@@ -252,6 +297,9 @@ install_zsh
 install_nvchad
 install_kitty
 install_lsd
+
+git_reset
+copy_dots_folder_to_users
 
 setup_permissions
 
