@@ -36,6 +36,8 @@ UPGRADE_COMMAND=""
 INSTALL_COMMAND_PREFIX=""
 SYSTEM_DIR=""
 
+SCRIPT_PWD="$(pwd)/$(dirname $0)"
+
 #--------------------------------------------------------------------------------# OS MANIPULATION
 
 sinstall() {
@@ -56,7 +58,7 @@ is_os_known() {
             INSTALL_COMMAND_PREFIX="apt install -y"
             SYSTEM_DIR="/usr/local/bin"
         ;;
-        
+
         *[dD]ebian*)
             OS="Debian"
             UPGRADE_COMMAND="apt update && apt upgrade -y && apt dist-upgrade"
@@ -151,26 +153,17 @@ esac
 
 setup_permissions() {
     for user in $USER_LIST; do
-        chown -R "$user":"$user" "/home/$user/"
         chown -h -R "$user":"$user" "/home/$user/"
     done
 }
 
-copy_dots_folder_to_users() {
-    copy_dots_folder_to_user() {
-        local username=$1
+copy_dotfiles_folder_to_opt() {
+    ORIG_PWD=$(pwd)
+    SCRIPT_DIR=$(dirname $0)
+    SCRIPT_PWD="$ORIG_PWD/$SCRIPT_DIR"
 
-        [ "$username" = "root" ] && user_folder="/root" || user_folder="/home/$username"
-
-        cd "$(dirname "$0")"
-        cp -R dots $user_folder
-        setup_permissions
-    }
-
-    copy_dots_folder_to_user "root"
-    for user in $USER_LIST; do
-        copy_dots_folder_to_user "$user"
-    done
+    cp -R "$SCRIPT_PWD" "/opt/dotfiles"
+    chmod -R a+r /opt/dotfiles/
 }
 
 deploy_dotfiles_with_stow() {
@@ -182,11 +175,11 @@ deploy_dotfiles_with_stow() {
 
         [ "$username" = "root" ] && user_folder="/root" || user_folder="/home/$username"
 
-        cd $user_folder/dots 
+        cd /opt/dotfiles/dots
         stow --adopt -t $user_folder $dotfile_name
         setup_permissions
     }
-    
+
     deploy_dotfiles_with_stow_for_user "root" $dotfile_name
     for user in $USER_LIST; do
         deploy_dotfiles_with_stow_for_user "$user" $dotfile_name
@@ -194,7 +187,7 @@ deploy_dotfiles_with_stow() {
 }
 
 git_reset() {
-    cd "$(dirname "$0")"
+    cd /opt/dotfiles
     git reset .
 }
 
@@ -256,7 +249,7 @@ install_nvchad() {
     echo "[.] Installing Nvim with NVChad..."
 
     sinstall "ripgrep"
-    
+
     curl -LO https://github.com/neovim/neovim/releases/latest/download/nvim-linux-x86_64.tar.gz
     rm -rf /opt/nvim-linux-x86_64
     tar -C /opt -xzf nvim-linux-x86_64.tar.gz
@@ -289,7 +282,7 @@ install_lsd () {
 
 #--------------------------------------------------------------------------------------------------# END OF FUNCTIONS
 
-copy_dots_folder_to_users
+copy_dotfiles_folder_to_opt
 
 install_nerdFonts
 install_nnn
@@ -299,9 +292,7 @@ install_kitty
 install_lsd
 
 git_reset
-copy_dots_folder_to_users
 
-setup_permissions
 
 echo
 echo "[.] Installation complete!"
