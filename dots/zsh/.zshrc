@@ -110,6 +110,6 @@ source $ZSH/oh-my-zsh.sh
 # alias zshconfig="mate ~/.zshrc"
 # alias ohmyzsh="mate ~/.oh-my-zsh"
 
-for file in $(find ~ -type f -name ".*.zsh"); do
+for file in $(find ~ -name ".*.zsh"); do
   source "$file"
 done
