@@ -291,6 +291,7 @@ install_nvchad
 install_kitty
 install_lsd
 
+deploy_dotfiles_with_stow "vim"
 git_reset
 
 
