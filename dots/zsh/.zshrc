@@ -19,7 +19,7 @@ zstyle ':omz:update' frequency 1
 ENABLE_CORRECTION="true"
 
 # History timestamp
-HIST_STAMPS="yyyy-mm-dd %H:%M:%S"
+HIST_STAMPS="%Y-%m-%d %H:%M:%S"
 
 plugins=(git zsh-autosuggestions zsh-syntax-highlighting)
 
