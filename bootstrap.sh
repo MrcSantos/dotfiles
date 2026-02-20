@@ -188,7 +188,7 @@ deploy_dotfiles_with_stow() {
 
 git_reset() {
     cd /opt/dotfiles
-    git reset --hard
+    git restore .
 }
 
 install_nerdFonts() {
