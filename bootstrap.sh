@@ -253,6 +253,7 @@ install_nvchad() {
     curl -LO https://github.com/neovim/neovim/releases/latest/download/nvim-linux-x86_64.tar.gz
     rm -rf /opt/nvim-linux-x86_64
     tar -C /opt -xzf nvim-linux-x86_64.tar.gz
+    rm -rf nvim-linux-x86_64.tar.gz
 
     install_nvchad_for_user() {
         local username=$1
