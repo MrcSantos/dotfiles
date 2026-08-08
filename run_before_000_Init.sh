@@ -1,3 +1,5 @@
+#!/bin/bash
+
 # Super user check
 if [[ $EUID -ne 0 ]]; then
     echo "[!] Sorry, this script must be run as root, aborting..."
